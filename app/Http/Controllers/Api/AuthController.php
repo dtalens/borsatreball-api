@@ -5,10 +5,7 @@ namespace App\Http\Controllers;
 use App\Entities\User;
 use App\Entities\Alumno;
 use App\Entities\Empresa;
-use App\Http\Requests\UserStoreRequest;
-use App\Http\Resources\LoginResource;
 use Carbon\Carbon;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\SignupActivate;
@@ -17,8 +14,17 @@ use Illuminate\Support\Facades\DB;
 class AuthController extends Controller
 {
 
-    public function signup(UserStoreRequest $request)
+    public function signup(Request $request)
     {
+        //dd($request);
+
+        $request->validate([
+            'name'     => 'required|string',
+            'email'    => 'required|string|email|unique:users',
+            'password' => 'required|string|confirmed',
+            'rol'      => 'required'
+        ]);
+
         $user = new User([
             'name'     => $request->name,
             'email'    => $request->email,
@@ -53,8 +59,6 @@ class AuthController extends Controller
         $tokenResult = $user->createToken('Token Acceso Personal');
         $token = $tokenResult->token;
         $token->save();
-
-        //return new LoginResource($user,$tokenResult);
         return[
             'access_token' => $tokenResult->accessToken,
             'rol'          => $user->rol,
@@ -62,7 +66,7 @@ class AuthController extends Controller
             'id'           => $user->id,
             'name'         => $user->name,
             'expires_at'   => Carbon::parse(
-                $token->expires_at)
+                $tokenResult->token->expires_at)
                 ->toDateTimeString()];
     }
 
@@ -76,10 +80,11 @@ class AuthController extends Controller
         $credentials['active'] = 1;
 
         if (!Auth::attempt($credentials)) {
-            throw new AuthenticationException('Unauthorized');
+            return response()->json([
+                'message' => 'Unauthorized'], 401);
         }
 
-        return response()->json(new LoginResource($request->user()), 200);
+        return response()->json($this->getToken($request->user()), 200);
     }
 
     public function logout(Request $request)

@@ -14,32 +14,36 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
+use function Symfony\Component\Translation\t;
 
 
 abstract class ApiBaseController extends Controller
 {
     protected $resource;
     protected $entity;
+    protected $request;
 
     public function __construct(){
        $this->resource = 'App\Http\Resources\\'.$this->model().'Resource';
-       $this->entity = 'App\Entities\\'.$this->model();
+       $this->entity = 'App\Models\\'.$this->model();
     }
 
     public function index(){
+
         return $this->resource::collection($this->entity::all());
     }
 
 
 
-        public function destroy($id)
-        {
-            if ($this->entity::destroy($id)) return response(1,200);
+    public function destroy($id)
+    {
+        if ($this->entity::destroy($id)) return response(1,200);
 
-            return response("No he pogut Esborrar $id",400);
-        }
-
-    public function store(Request $request)
+        return response("No he pogut Esborrar $id",400);
+    }
+/**
+    public function store($request)
     {
         if ($errors = $this->validate($request, $this->entity::rules())) return $this->response($errors);
 
@@ -56,9 +60,9 @@ abstract class ApiBaseController extends Controller
 
         return $this->manageResponse($registro,$request);
 
-    }
+    }*/
 
-    protected function manageResponse($registro, Request $request){
+    protected function manageResponse($registro){
 
         return new $this->resource($registro);
     }

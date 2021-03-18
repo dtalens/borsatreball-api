@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class OfertaController extends ApiBaseController
 {
-    use traitRelation;
+    //use traitRelation;
 
     public function model(){
         return 'Oferta';

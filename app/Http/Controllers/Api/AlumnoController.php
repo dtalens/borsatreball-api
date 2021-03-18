@@ -3,15 +3,22 @@
 namespace App\Http\Controllers\Api;
 
 use App\Entities\Ciclo;
+use App\Http\Requests\AlumnoStoreRequest;
 use App\Http\Resources\AlumnoResource;
+
 use Illuminate\Http\Request;
+
 use App\Entities\Alumno;
 use App\Notifications\ValidateStudent;
+
+use Illuminate\Validation\UnauthorizedException;
+use Illuminate\Auth\AuthenticationException;
+use function PHPUnit\Framework\throwException;
 
 
 class AlumnoController extends ApiBaseController
 {
-    use traitRelation;
+    //use traitRelation;
 
     public function model(){
         return 'Alumno';
@@ -25,7 +32,7 @@ class AlumnoController extends ApiBaseController
     {
         $alumno = Alumno::find($idAlumno);
         $alumno->Ciclos()->updateExistingPivot($idCiclo, ['any' => $request->any,'validado'=>$request->validado]);
-        return parent::manageResponse($alumno, $request);
+        return parent::manageResponse($alumno);
     }
 
     protected function adviseSomeOne($registro){
@@ -36,28 +43,44 @@ class AlumnoController extends ApiBaseController
 
     public function index()
     {
-        if (AuthUser()->isResponsable())
-            return AlumnoResource::collection(Alumno::BelongsToCicles(Ciclo::where('responsable',AuthUser()->id)->get()));
-        if (AuthUser()->isAlumno())
-            return AlumnoResource::collection(Alumno::where('id',AuthUser()->id)->get());
-        if (AuthUser()->isEmpresa())
+        if (AuthUser()->isResponsable()) {
+            return AlumnoResource::collection(Alumno::BelongsToCicles(Ciclo::where('responsable', AuthUser()->id)->get()));
+        }
+        if (AuthUser()->isAlumno()) {
+            return AlumnoResource::collection(Alumno::where('id', AuthUser()->id)->get());
+        }
+        if (AuthUser()->isEmpresa()) {
             return AlumnoResource::collection(Alumno::InterestedIn(AuthUser()->id));
-        if (AuthUser()->isAdmin()) return parent::index();
-        return response('No autenticado',405);
+        }
+        if (AuthUser()->isAdmin()) {
+            return parent::index();
+        }
+        throw new AuthenticationException('Usuario no autenticado');
     }
 
     public function show($id)
     {
-        if (AuthUser()->isAlumno()) $id = AuthUser()->id;
-        if (AuthUser()) return parent::show($id);
-        return response('No tens permisos',405);
+        if (AuthUser()->isAlumno() && AuthUser()->id == $id){
+            return parent::show($id);
+        } else {
+            throw new UnauthorizedException('No tens permisos');
+        }
     }
 
-    public function update(Request $request, $id)
+    public function update(AlumnoStoreRequest $request, $id)
     {
-        if (AuthUser()->isAlumno()) $id = AuthUser()->id;
+        if (AuthUser()->isAlumno() && AuthUser()->id == $id){
+            $registro = Alumno::findOrFail($id);
+            return $this->manageResponse($registro->update($request->all()));
+        }
+        else {
+            throw new UnauthorizedException('No tens permisos');
+        }
+    }
 
-        return parent::update($request,$id);
+    public function store(AlumnoStoreRequest $request)
+    {
+        return $this->manageResponse(Alumno::create($request->all()));
     }
 
 

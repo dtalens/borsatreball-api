@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
+
 
 class UserController extends ApiBaseController
 {
@@ -13,10 +15,9 @@ class UserController extends ApiBaseController
 
     public function index()
     {
+        if (!AuthUser()) throw new AuthenticationException('No autenticado');
         if (AuthUser()->isAdmin()) return parent::index();
         if (AuthUser()) return parent::show(AuthUser()->id);
-
-        return response('No autenticado', 405);
     }
 
     public function show($id)
@@ -24,7 +25,7 @@ class UserController extends ApiBaseController
         if (AuthUser()->isAdmin()) return parent::show($id);
         if (AuthUser()) return parent::show(AuthUser()->id);
 
-        return response('No autenticado', 405);
+        throw new AuthenticationException('No autenticado');
     }
 
     public function update(Request $request, $id)
