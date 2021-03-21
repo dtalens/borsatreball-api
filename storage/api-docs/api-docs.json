@@ -1,0 +1,1017 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Borsa Batoi ApplicationAPI",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/alumnos": {
+            "get": {
+                "tags": [
+                    "alumnes"
+                ],
+                "summary": "Dades dels alumnes",
+                "description": "Torna les dades dels alumnes amb els cicles",
+                "operationId": "indexAlumnes",
+                "responses": {
+                    "200": {
+                        "description": "Alumnes segons el permis",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/AlumnoResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "alumnes"
+                ],
+                "summary": "Guardar alumno",
+                "description": "Guardar perfil alumno",
+                "operationId": "storeAlumnes",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AlumnoStoreRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Alumno correctament donat d'alta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AlumnoResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Credencials no vàlides"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/alumnos/{id}": {
+            "get": {
+                "tags": [
+                    "alumnes"
+                ],
+                "summary": "Dades d'un alumne",
+                "description": "Torna les dades d'un alumne amb els cicles",
+                "operationId": "showAlumnes",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Alumne segons el permis",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/AlumnoResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "alumnes"
+                ],
+                "summary": "Modificar alumno",
+                "description": "Modificar perfil alumno",
+                "operationId": "updateAlumnes",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AlumnoStoreRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Alumno correctament donat d'alta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AlumnoResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Credencials no vàlides"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/alumnos/{idAlumno}/ciclo/{idCiclo}": {
+            "put": {
+                "tags": [
+                    "alumnes"
+                ],
+                "summary": "Modificar ciclo Alumno",
+                "description": "Modificar ciclo Alumno",
+                "operationId": "updateAlumnesCicle",
+                "parameters": [
+                    {
+                        "name": "idAlumno",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "name": "idCiclo",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AlumnoCicloUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Alumno correctament modificat",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AlumnoResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Credencials no vàlides"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ciclos": {
+            "get": {
+                "tags": [
+                    "cicles"
+                ],
+                "summary": "Dades dels cicle",
+                "description": "Torna les dades dels cicles",
+                "operationId": "indexCicles",
+                "responses": {
+                    "200": {
+                        "description": "Cicles",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/CicloResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "cicles"
+                ],
+                "summary": "Guardar ciclo",
+                "description": "Guardar ciclo",
+                "operationId": "storeCiclo",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CicloStoreRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cicle correctament donat d'alta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CicloResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Credencials no vàlides"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ciclos/{id}": {
+            "get": {
+                "tags": [
+                    "cicles"
+                ],
+                "summary": "Dades d'un cicle",
+                "description": "Torna les dades d'un cicle",
+                "operationId": "showCicle",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ciclos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/CicloResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "cicles"
+                ],
+                "summary": "Modificar cicle",
+                "description": "Modificar cicle",
+                "operationId": "updateCicles",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CicloStoreRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ciclo correctament donat d'alta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CicloResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Credencials no vàlides"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "cicles"
+                ],
+                "summary": "Esborar cicle",
+                "description": "Torna les dades del cicle esborrat",
+                "operationId": "deleteCicle",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ciclos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/CicloResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/menu": {
+            "get": {
+                "tags": [
+                    "menu"
+                ],
+                "summary": "Menu de l'aplicatiu",
+                "description": "Torna les dades dels menu que li correspon a l'usuari",
+                "operationId": "indexMenu",
+                "responses": {
+                    "200": {
+                        "description": "Menu de l'aplicatiu",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/MenuResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Sign in",
+                "description": "Login by email, password",
+                "operationId": "authLogin",
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user1@mail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "PassWord12345"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resposta usuari autenticat",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Credencials no vàlides"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AlumnoCicloUpdateRequest": {
+                "title": "AlumneCicle",
+                "description": "Fillable AlumneCicle",
+                "properties": {
+                    "any": {
+                        "title": "any",
+                        "description": "Any obtenció cicle",
+                        "type": "integer",
+                        "example": "2018"
+                    },
+                    "validado": {
+                        "title": "validado",
+                        "description": "El cicle ha estat validad",
+                        "type": "boolean",
+                        "example": "1"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "AlumnoCiclo"
+                }
+            },
+            "AlumnoStoreRequest": {
+                "title": "Alumne",
+                "description": "Fillable Alumnos",
+                "properties": {
+                    "id": {
+                        "title": "id",
+                        "description": "Identificador d'usuari",
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "nombre": {
+                        "title": "nombre",
+                        "description": "Nom de l'alumne",
+                        "type": "string",
+                        "example": "Jose Manuel"
+                    },
+                    "apellidos": {
+                        "title": "apelllidos",
+                        "description": "Cognoms de l'alumne",
+                        "type": "string",
+                        "example": "Miró García"
+                    },
+                    "domicilio": {
+                        "title": "domicilio",
+                        "description": "Adreça de l'alumne",
+                        "type": "string",
+                        "example": "C/Cid 14"
+                    },
+                    "info": {
+                        "title": "info",
+                        "description": "Info de l'alumne",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "bolsa": {
+                        "title": "bolsa",
+                        "description": "bolsa",
+                        "type": "boolean",
+                        "example": "0"
+                    },
+                    "cv_enlace": {
+                        "title": "cv_enlace",
+                        "description": "Enllaç al curriculum de l'alumne",
+                        "type": "string",
+                        "example": "https://www.pepebotera.com"
+                    },
+                    "telefono": {
+                        "title": "telefono",
+                        "description": "Telèfon de l'alumne",
+                        "type": "string",
+                        "example": "666666666"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Alumno"
+                }
+            },
+            "CicloStoreRequest": {
+                "title": "Cicle",
+                "description": "Fillable Cicles",
+                "properties": {
+                    "codigo": {
+                        "title": "codigo",
+                        "description": "Identificador de ciclo",
+                        "type": "string",
+                        "example": "DAW"
+                    },
+                    "ciclo": {
+                        "title": "ciclo",
+                        "description": "Nom llarg del cicle",
+                        "type": "string",
+                        "example": "Disseny d'aplicacions web(LOE)"
+                    },
+                    "Dept": {
+                        "title": "departament",
+                        "description": "Departament del cicle",
+                        "type": "string",
+                        "example": "inf"
+                    },
+                    "responsable": {
+                        "title": "Responsable",
+                        "description": "Responsable del cicle",
+                        "type": "integer",
+                        "example": "220"
+                    },
+                    "vCiclo": {
+                        "title": "vCiclo",
+                        "description": "Info del cicle",
+                        "type": "string",
+                        "example": "Diseeny d'aplicacion web"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Ciclo"
+                }
+            },
+            "AlumnoCicloResource": {
+                "title": "AlumneCicle",
+                "description": "Informació del cicles d'un alumne",
+                "properties": {
+                    "id_alumno": {
+                        "title": "id_alumno",
+                        "description": "Identificador d'usuari",
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "id_ciclo": {
+                        "title": "id_ciclo",
+                        "description": "ID del cicle",
+                        "type": "integer",
+                        "example": "5"
+                    },
+                    "any": {
+                        "title": "any",
+                        "description": "Any acabament del cicle",
+                        "type": "string",
+                        "example": "2018"
+                    },
+                    "validado": {
+                        "title": "validado",
+                        "description": "El cicle ha estat validad per responsable",
+                        "type": "boolean",
+                        "example": "1"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "AlumnoCicloResource"
+                }
+            },
+            "AlumnoResource": {
+                "title": "Alumne",
+                "description": "Dades d'alumne",
+                "properties": {
+                    "id": {
+                        "title": "id",
+                        "description": "Identificador d'usuari",
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "nombre": {
+                        "title": "nombre",
+                        "description": "Nom de l'alumne",
+                        "type": "string",
+                        "example": "Jose Manuel"
+                    },
+                    "apellidos": {
+                        "title": "apelllidos",
+                        "description": "Cognoms de l'alumne",
+                        "type": "string",
+                        "example": "Miró García"
+                    },
+                    "domicilio": {
+                        "title": "domicilio",
+                        "description": "Adreça de l'alumne",
+                        "type": "string",
+                        "example": "C/Cid 14"
+                    },
+                    "info": {
+                        "title": "info",
+                        "description": "Info de l'alumne",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "bolsa": {
+                        "title": "bolsa",
+                        "description": "bolsa",
+                        "type": "boolean",
+                        "example": "0"
+                    },
+                    "cv_enlace": {
+                        "title": "cv_enlace",
+                        "description": "Enllaç al curriculum de l'alumne",
+                        "type": "string",
+                        "example": "https://www.pepebotera.com"
+                    },
+                    "telefono": {
+                        "title": "telefono",
+                        "description": "Telèfon de l'alumne",
+                        "type": "string",
+                        "example": "666666666"
+                    },
+                    "email": {
+                        "title": "email",
+                        "description": "Email de l'alumne",
+                        "type": "string",
+                        "example": "pepe.botera@gmail.com"
+                    },
+                    "ciclos": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AlumnoCicloResource"
+                        }
+                    },
+                    "created_at": {
+                        "title": "created_at",
+                        "description": "Hora de creació registre",
+                        "type": "time",
+                        "example": "2022-03-17 19:37:34"
+                    },
+                    "updated_at": {
+                        "title": "updated_at",
+                        "description": "Hora de modificació registre",
+                        "type": "time",
+                        "example": "2022-03-17 19:37:34"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Alumno"
+                }
+            },
+            "CicloResource": {
+                "title": "Cicle",
+                "description": "Informació del cicles d'un alumne",
+                "properties": {
+                    "id": {
+                        "title": "ID cicle",
+                        "description": "Identificador de cicle",
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "codigo": {
+                        "title": "codigo",
+                        "description": "codi intranet",
+                        "type": "string",
+                        "example": "CFMX"
+                    },
+                    "ciclo": {
+                        "title": "Codi del cicle llarg",
+                        "description": "Codi del cicle llarg",
+                        "type": "string",
+                        "example": "CFM FCT ESTÈTICA (LOGSE)"
+                    },
+                    "Dept": {
+                        "title": "Departament",
+                        "description": "Departament del cicle",
+                        "type": "string",
+                        "example": "Img"
+                    },
+                    "cDept": {
+                        "title": "Departament en castellà",
+                        "description": "Nom del departament en castellà",
+                        "type": "string",
+                        "example": "Imagen Personal"
+                    },
+                    "vDept": {
+                        "title": "Departament en valencià",
+                        "description": "Nom del departament en valencià",
+                        "type": "string",
+                        "example": "Imatge Personal"
+                    },
+                    "reponsable": {
+                        "title": "Codi usuari",
+                        "description": "Codi usuari reponsable del cicle",
+                        "type": "integer",
+                        "example": "216"
+                    },
+                    "cCiclo": {
+                        "title": "Cicle en castellà",
+                        "description": "Cicle en castellà",
+                        "type": "string",
+                        "example": "Atención a personas en situación de dependencia"
+                    },
+                    "vCiclo": {
+                        "title": "Cicle en valencià",
+                        "description": "Cicle en valencià",
+                        "type": "string",
+                        "example": "Atenció a persones en situació de dependència"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "CicleResource"
+                }
+            },
+            "LoginResource": {
+                "title": "Login Resource",
+                "description": "Resposta al Login correcte",
+                "properties": {
+                    "access_token": {
+                        "title": "access_token",
+                        "description": "Token d'accès",
+                        "type": "string",
+                        "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI2IiwianRpIjoiNGY4YjE5OTMzNjQxZjVjMDVjNmU1MGE3MGQxNmE5M2ZkYWZmNjkwZDI5M2Y3MTU2NzM5NTkwMDM5YWFhM2FiZDcw"
+                    },
+                    "rol": {
+                        "title": "rol",
+                        "description": "Rol d'usuari",
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "token_type": {
+                        "title": "token_type",
+                        "description": "Tipus de token",
+                        "type": "string",
+                        "example": "Bearer"
+                    },
+                    "id": {
+                        "title": "id",
+                        "description": "id d'usuari",
+                        "type": "integer",
+                        "example": "12"
+                    },
+                    "name": {
+                        "title": "name",
+                        "description": "Nom de l'usuari",
+                        "type": "string",
+                        "example": "Ignasi"
+                    },
+                    "expires_at": {
+                        "title": "expires_at",
+                        "description": "Hora caducitat token",
+                        "type": "time",
+                        "example": "2022-03-17 19:37:34"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "LoginResource"
+                }
+            },
+            "MenuResource": {
+                "title": "Menu",
+                "description": "Menu d'usuari",
+                "properties": {
+                    "id": {
+                        "title": "id",
+                        "description": "Identificador de menu",
+                        "type": "integer",
+                        "example": "6"
+                    },
+                    "order": {
+                        "title": "order",
+                        "description": "Ordre del menu",
+                        "type": "integer",
+                        "example": "4"
+                    },
+                    "icon": {
+                        "title": "icon",
+                        "description": "Icona del menu",
+                        "type": "string",
+                        "example": "account_box"
+                    },
+                    "text": {
+                        "title": "text",
+                        "description": "Texte del menu",
+                        "type": "string",
+                        "example": "Perfil"
+                    },
+                    "path": {
+                        "title": "Path",
+                        "description": "Path del menu",
+                        "type": "string",
+                        "example": "/perfil"
+                    },
+                    "rol": {
+                        "title": "rol",
+                        "description": "rol",
+                        "type": "integer",
+                        "example": "210"
+                    },
+                    "parent": {
+                        "title": "parent",
+                        "description": "Pare del menu",
+                        "type": "string",
+                        "example": "null"
+                    },
+                    "model": {
+                        "title": "model",
+                        "description": "???",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "active": {
+                        "title": "active",
+                        "description": "Es Actiu?",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "comments": {
+                        "type": "string",
+                        "example": "null"
+                    },
+                    "icon_alt": {
+                        "title": "icon_at",
+                        "description": "Icona alternativa",
+                        "type": "string",
+                        "example": "null"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Menu"
+                }
+            }
+        },
+        "securitySchemes": {
+            "apiAuth": {
+                "type": "http",
+                "description": "Login with email and password to get the authentication token",
+                "name": "Token based Based",
+                "in": "header",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "security": [
+        []
+    ]
+}

@@ -45,7 +45,8 @@ Route::group(['middleware' => 'auth:api'], function() {
         ]);
     Route::put('ofertas/{id}/validar','Api\OfertaController@Valida');
     Route::put('ofertas/{id}/alumno', 'Api\OfertaController@AlumnoInterested');
-    Route::put('alumno/{alumno}/ciclo/{id}','Api\AlumnoController@ValidaCiclo');
+    // Modificada
+    Route::put('alumnos/{alumno}/ciclo/{id}','Api\AlumnoController@ValidaCiclo')->name('alumnos.ciclo.update');
     Route::get('ofertas-arxiu', 'Api\OfertaController@indexArxiu');
 });
 

@@ -13,7 +13,16 @@ use Illuminate\Routing\Controller as BaseController;
  *    version="1.0.0",
  * )
  */
-
+/**
+ * @OA\SecurityScheme(
+ *     type="http",
+ *     description="Login with email and password to get the authentication token",
+ *     name="Token based Based",
+ *     in="header",
+ *     scheme="bearer",
+ *     securityScheme="apiAuth",
+ * )
+ */
 
 class Controller extends BaseController
 {

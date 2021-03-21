@@ -4,6 +4,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 
+
+
 class Alumno extends Model
 {
     public $timestamps = true;
@@ -17,6 +19,7 @@ class Alumno extends Model
         return $this->belongsToMany(Ciclo::class,'alumnos_ciclos', 'id_alumno',
             'id_ciclo', 'id', 'id')->withPivot(['any','validado']);
     }
+
 
     public function CiclosValidos()
     {

@@ -45,7 +45,7 @@ class Handler extends ExceptionHandler
             if (request()->is('api*')) {
                 if ($exception instanceof ModelNotFoundException) {
                     return response()->json(
-                        ['error' => 'Recurso no encontrado'],
+                        ['error' => $exception->getMessage()],
                         404
                     );
                 }
@@ -57,25 +57,25 @@ class Handler extends ExceptionHandler
                 }
                 else if ($exception instanceof AuthenticationException||$exception instanceof RouteNotFoundException) {
                     return response()->json(
-                        ['error' => 'Credencials no vàlides'],
+                        ['error' => $exception->getMessage()],
                         422
                     );
                 }
                 else if ($exception instanceof NotFoundHttpException) {
                     return response()->json(
-                        ['error' => 'Ruta no trobada'],
+                        ['error' => $exception->getMessage()],
                         401
                     );
                 }
                 else if ($exception instanceof ValidationException) {
                     return response()->json(
-                        ['error' => 'Les dades no son vàlides'],
+                        ['error' => $exception->getMessage()],
                         400
                     );
                 }
                 else if ($exception instanceof UnauthorizedException) {
                     return response()->json(
-                        ['error' => 'Usuari no autorizat'],
+                        ['error' => $exception->getMessage()],
                         405
                     );
                 }

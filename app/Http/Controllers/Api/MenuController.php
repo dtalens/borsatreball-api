@@ -2,6 +2,27 @@
 
 namespace App\Http\Controllers\Api;
 
+/**
+ * @OA\Get(
+ * path="/api/menu",
+ * summary="Menu de l'aplicatiu",
+ * description="Torna les dades dels menu que li correspon a l'usuari",
+ * operationId="indexMenu",
+ * tags={"menu"},
+ * @OA\Response(
+ *    response=200,
+ *    description="Menu de l'aplicatiu",
+ *    @OA\JsonContent(
+ *        @OA\Property(
+ *          property="data",
+ *          type="array",
+ *          @OA\Items(ref="#/components/schemas/MenuResource")
+ *        )
+ *    )
+ *   )
+ * )
+ */
+
 
 class MenuController extends ApiBaseController
 {
