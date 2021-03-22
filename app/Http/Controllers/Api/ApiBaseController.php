@@ -28,13 +28,15 @@ abstract class ApiBaseController extends Controller
        $this->resource = 'App\Http\Resources\\'.$this->model().'Resource';
        $this->entity = 'App\Models\\'.$this->model();
     }
+    public abstract function model();
 
     public function index(){
-
         return $this->resource::collection($this->entity::all());
     }
 
-
+    public function show($id){
+        return new $this->resource($this->entity::find($id));
+    }
 
     public function destroy($id)
     {
@@ -42,6 +44,7 @@ abstract class ApiBaseController extends Controller
 
         return response("No he pogut Esborrar $id",400);
     }
+
 /**
     public function store($request)
     {
@@ -93,6 +96,8 @@ abstract class ApiBaseController extends Controller
         ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
     }
 
+
+    /*
     public function show($cadena)
     {
         if (!strpos($cadena, '=') && !strpos($cadena, '>') && !strpos($cadena, '<') && !strpos($cadena, ']') && !strpos($cadena, '['))
@@ -109,8 +114,7 @@ abstract class ApiBaseController extends Controller
 
         return $this->resource::collection($data);
     }
-
-    public abstract function model();
+    */
 
     /**
      * @param $operacion
@@ -118,6 +122,7 @@ abstract class ApiBaseController extends Controller
      * @param $data
      * @return mixed
      */
+    /*
     private function filterOperation($operacion, $filtro, $data)
     {
         $campos = explode($operacion, $filtro);
@@ -146,5 +151,6 @@ abstract class ApiBaseController extends Controller
         }
         return $data;
     }
+    */
 
 }

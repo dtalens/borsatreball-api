@@ -115,32 +115,6 @@ use App\Models\Ciclo;
  * )
  */
 
-/**
- * @OA\Delete (
- * path="/api/ciclos/{id}",
- * summary="Esborar cicle",
- * description="Torna les dades del cicle esborrat",
- * operationId="deleteCicle",
- * tags={"cicles"},
- * security={ {"apiAuth": {} }},
- * @OA\Parameter(
- *          name="id",
- *          in="path",
- *          required=true,
- * ),
- * @OA\Response(
- *    response=200,
- *    description="Ciclos",
- *    @OA\JsonContent(
- *        @OA\Property(
- *          property="data",
- *          type="array",
- *          @OA\Items(ref="#/components/schemas/CicloResource")
- *        )
- *    )
- *   )
- * )
- */
 
 class CicloController extends ApiBaseController
 {

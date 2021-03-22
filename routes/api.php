@@ -36,12 +36,15 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::group(['middleware' => 'auth:api'], function() {
 
-    Route::resource('alumnos', 'Api\AlumnoController', ['except' => ['edit', 'create','destroy']]);
-    Route::resource('empresas', 'Api\EmpresaController', ['except' => ['edit', 'create','destroy']]);
+    Route::apiResources(
+        [   'alumnos'   => 'Api\AlumnoController',
+            'empresas'  => 'Api\EmpresaController',
+            'ciclos'    =>'Api\CicloController'
+        ],
+        ['except' => ['destroy']]);
     Route::apiResources(
         [   'users' => 'Api\UserController',
             'ofertas' => 'Api\OfertaController',
-            'ciclos' => 'Api\CicloController',
         ]);
     Route::put('ofertas/{id}/validar','Api\OfertaController@Valida');
     Route::put('ofertas/{id}/alumno', 'Api\OfertaController@AlumnoInterested');

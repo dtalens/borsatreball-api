@@ -66,7 +66,6 @@ class CicloStoreRequest extends FormRequest
             'ciclo' => 'required|string|max:50',
             'responsable' => 'exists|users:id',
             'vCiclo' => 'required|string|max:80'
-
         ];
     }
 }

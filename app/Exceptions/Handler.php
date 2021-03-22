@@ -8,6 +8,7 @@ use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Throwable;
@@ -55,13 +56,14 @@ class Handler extends ExceptionHandler
                         500
                     );
                 }
-                else if ($exception instanceof AuthenticationException||$exception instanceof RouteNotFoundException) {
+                else if ($exception instanceof AuthenticationException||$exception instanceof RouteNotFoundException)
+                {
                     return response()->json(
                         ['error' => $exception->getMessage()],
                         422
                     );
                 }
-                else if ($exception instanceof NotFoundHttpException) {
+                else if ($exception instanceof NotFoundHttpException || $exception instanceof MethodNotAllowedHttpException) {
                     return response()->json(
                         ['error' => $exception->getMessage()],
                         401
@@ -79,9 +81,9 @@ class Handler extends ExceptionHandler
                         405
                     );
                 }
-                /**else if (isset($exception)) {
+                else if (isset($exception)) {
                     return response()->json(['error' => 'Error de servidor'], 500);
-                }*/
+                }
             }
         });
     }
