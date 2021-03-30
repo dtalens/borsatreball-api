@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\SignupActivate;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -24,7 +25,7 @@ class AuthController extends Controller
             'email'    => $request->email,
             'password' => bcrypt($request->password),
             'rol'      => $request->rol,
-            'activation_token' => str_random(60),
+            'activation_token' => Str::str_random(60),
          ]);
 
         DB::transaction(function () use ($user) {
@@ -45,7 +46,7 @@ class AuthController extends Controller
         $user->active = true;
         $user->activation_token = '';
         $user->save();
-//        return $user;
+
         return redirect('/');
     }
 
