@@ -78,7 +78,7 @@ Ara descarreguem l'aplicació des de Github:
 git clone https://github.com/cipfpbatoi/borsaBatoi.git
 ```
 
-A continuació cal asegurar-se que l'usuari www-data pot escriure dins del directori **storage**.
+A continuació cal asegurar-se que l'usuari www-data pot escriure dins del directori **storage** i dins de **bootstrap/cache**.
 
 Per a finalitzar hem d'activar (si no ho estan ja) els mòduls **ssl** i **rewrite** i reiniciar apache:
 ```bash
