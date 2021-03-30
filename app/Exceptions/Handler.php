@@ -82,7 +82,7 @@ class Handler extends ExceptionHandler
                     );
                 }
                 else if (isset($exception)) {
-                    return response()->json(['error' => 'Error de servidor'], 500);
+                    return response()->json(['error' => 'Error de servidor:' . $exception->getMessage()], 500);
                 }
             }
         });
