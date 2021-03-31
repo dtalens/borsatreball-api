@@ -26,13 +26,28 @@ mysql_secure_installation
 sudo mysql -u root
 
 mysql> CREATE USER nomusuari@localhost IDENTIFIED BY 'P@ssw0rd';
-# SI volem vore-ho
+# Si volem vore-ho
 mysql> SELECT User, Host, plugin, authentication_string FROM mysql.user;
 # Creem la base de dades
 mysql> CREATE DATABASE borsatreball;
 # i li donem privilegis a l'usuari
 mysql> GRANT ALL PRIVILEGES ON borsatreball.* TO nomusuari@localhost;
 mysql> exit;
+```
+
+Ara descarreguem l'aplicació des de Github:
+```bash
+git clone https://github.com/cipfpbatoi/borsatreball-api.git
+```
+
+Copiem el fitxer **.env**, que no es descarrega de git, des de **.env-example**. Allí hem de configurar:
+- APP_NAME: Posem el nostr nom (CIP FP Batoi)
+- l'accés a la BBDD (DB_DATABASE, DB_USERNAME, DB_PASSWORD)
+- el mail (s'explica més avall)
+
+Ara em d'executar el `key:generate`:
+```bash
+php artisan key:generate
 ```
 
 ### Configurar apache
@@ -73,11 +88,6 @@ Posem el nostre domini en el **/etc/hosts**:
 127.0.0.1   borsa.my
 ```
 
-Ara descarreguem l'aplicació des de Github:
-```bash
-git clone https://github.com/cipfpbatoi/borsaBatoi.git
-```
-
 A continuació cal asegurar-se que l'usuari www-data pot escriure dins del directori **storage** i dins de **bootstrap/cache**.
 
 Per a finalitzar hem d'activar (si no ho estan ja) els mòduls **ssl** i **rewrite** i reiniciar apache:
@@ -96,19 +106,11 @@ Des de la carpeta on tenim l'aplicació descarregada instal·lem les llibreries 
 composer install     # en producció: php composer.phar install
 ```
 
-Copiem el fitxer **.env**, que no es descarrega de git, des de **.env-example**. Allí hem de configurar:
-- APP_NAME: Ponemos nuestro nombre (CIP FP Batoi)
-- l'accés a la BBDD (DB_DATABASE, DB_USERNAME, DB_PASSWORD)
-- el mail: MAIL_DRIVER (sendmail), MAIL_HOST (localhost), MAIL_PORT (25), MAIL_USERNAME (usuario del sistema que envía los e-mails), MAIL_PASSWORD (su contraseña), MAIL_ ENCRYPTION (null), MAIL_FROM_ADDRESS (borsatreball@cipfpbatoi.es), MAIL_FROM_NAME ("Borsa Treball Batoi")
-- 
-
 Creem la BBDD `borsatreball` i executem la migración (això no cal fer-ho si importem la BBDD en compte de crear-la):
 ```bash
 php artisan migrate
 php artisan db:seed
 ```
-
-Hem de donar permisos d'escriptura a l'usuari **www-data** sobre la carpeta storage i el seu contingut.
 
 Per a l'autenticació hem d'instal·lar [laravel/passport](https://laravel.com/docs/5.8/passport). A continuació executem el comando `passport:install` que crea las claus d'encriptació que s'utilitzen per a generar els tokens. A més crea els clients "personal access" i "password grant" clients which will be used to generate access tokens):
 ```bash
@@ -116,6 +118,8 @@ php artisan passport:install
 ```
 
 Si has de tornar a crear la base de dades hauras d'executar `php artisan passport:client --personal` per a que es tornen a generar les taules que utilitza _passport_ per a autenticar als usuaris.
+
+Donem permisos d'escriptura a l'usuari **www-data** sobre la carpeta storage i el seu contingut.
 
 ## Configurar el mail
 Nosaltres hem instal·lat **`exim4`** i hem creat en el sistema l'usuari `usrmail` per a enviar els correus. Configurem exim4 amb `dpkg-reconfigure exim4-config`. El fitxer /etc/exim4/update-exim4.conf.conf hauria de quedar-se:
@@ -154,12 +158,5 @@ MAIL_FROM_NAME="Borsa Treball Batoi"
 MAIL_FROM_ADDRESS=borsa@nosaltres.com
 ```
 
-## Configurar l'aplicació del backend
-El que hem fet fins ara és preparar el nostre servidor per a rebre peticions de l'aplicació que utilitzarà l'usuari, que és la que anem a instal·lar ara.
-
-### Descàrrega de l'aplicació del frontend per a desenvolupament
-Si volem canviar l'aplicació ens descarregarem el repositoriA l'hora de descarregar el codi, des de la carpeta `~/code` inicialitzem git i descarregem l'aplicació:
-```bash
-git clone https://github.com/cipfpbatoi/borsatreball-front.git
-```
-
+## Configurar l'aplicació del frontend
+El que hem fet fins ara és preparar el nostre servidor per a rebre peticions de l'aplicació que utilitzarà l'usuari. Les instruccions per a descarregar i configurar l'aplicació d'usuari es troben a [https://github.com/cipfpbatoi/borsatreball-front](https://github.com/cipfpbatoi/borsatreball-front)
