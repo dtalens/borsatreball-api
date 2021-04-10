@@ -440,46 +440,6 @@
                         "apiAuth": []
                     }
                 ]
-            },
-            "delete": {
-                "tags": [
-                    "cicles"
-                ],
-                "summary": "Esborar cicle",
-                "description": "Torna les dades del cicle esborrat",
-                "operationId": "deleteCicle",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Ciclos",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/CicloResource"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "apiAuth": []
-                    }
-                ]
             }
         },
         "/api/menu": {
@@ -543,6 +503,55 @@
                                     }
                                 },
                                 "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resposta usuari autenticat",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Credencials no vàlides"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/signup": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Sign up",
+                "description": "Register user",
+                "operationId": "authSignup",
+                "requestBody": {
+                    "description": "User fields",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserStoreRequest"
                             }
                         }
                     }
@@ -698,6 +707,115 @@
                 "type": "object",
                 "xml": {
                     "name": "Ciclo"
+                }
+            },
+            "UserStoreRequest": {
+                "title": "UserStoreRequest",
+                "description": "Registrar Usuari",
+                "required": [
+                    "email,password,password_confirmation,rol,nombre,domicilio,telefono"
+                ],
+                "properties": {
+                    "email": {
+                        "title": "email",
+                        "description": "Email de l'usuari",
+                        "type": "email",
+                        "example": "pepebotera@gmail.com"
+                    },
+                    "password": {
+                        "title": "password",
+                        "description": "Password de l'usuari",
+                        "type": "string",
+                        "example": "1234"
+                    },
+                    "password_confirmation": {
+                        "title": "password",
+                        "description": "Password de l'usuari",
+                        "type": "string",
+                        "example": "1234"
+                    },
+                    "rol": {
+                        "title": "rol",
+                        "description": "Rol de l'usuari",
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "nombre": {
+                        "title": "nombre",
+                        "description": "Nom de l'alumne o empresa",
+                        "type": "string",
+                        "example": "Jose Manuel"
+                    },
+                    "domicilio": {
+                        "title": "domicilio",
+                        "description": "Adreça de l'alumne",
+                        "type": "string",
+                        "example": "C/Cid 14"
+                    },
+                    "telefono": {
+                        "title": "telefono",
+                        "description": "Telèfon de l'alumne",
+                        "type": "string",
+                        "example": "666666666"
+                    },
+                    "cif": {
+                        "title": "cif",
+                        "description": "Cif de l'empresa",
+                        "type": "string",
+                        "example": "A12345678"
+                    },
+                    "localidad": {
+                        "title": "localidad",
+                        "description": "Localidad de l'empresa",
+                        "type": "string",
+                        "example": "Alcoi"
+                    },
+                    "contacto": {
+                        "title": "contacto",
+                        "description": "Persona de contacte de l'empresa",
+                        "type": "string",
+                        "example": "Pepe Botera"
+                    },
+                    "web": {
+                        "title": "web",
+                        "description": "Pagina web de l'empresa",
+                        "type": "string",
+                        "example": "http://www.pepebotera.com"
+                    },
+                    "descripcion": {
+                        "title": "descripcion",
+                        "description": "Descripció de l'empresa",
+                        "type": "string",
+                        "example": "Chapuzas a domicilio"
+                    },
+                    "apellidos": {
+                        "title": "apelllidos",
+                        "description": "Cognoms de l'alumne",
+                        "type": "string",
+                        "example": "Miró García"
+                    },
+                    "info": {
+                        "title": "info",
+                        "description": "Info de l'alumne",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "bolsa": {
+                        "title": "bolsa",
+                        "description": "bolsa",
+                        "type": "boolean",
+                        "example": "0"
+                    },
+                    "cv_enlace": {
+                        "title": "cv_enlace",
+                        "description": "Enllaç al curriculum de l'alumne",
+                        "type": "string",
+                        "example": "https://www.pepebotera.com"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Register"
                 }
             },
             "AlumnoCicloResource": {
@@ -878,6 +996,94 @@
                 "type": "object",
                 "xml": {
                     "name": "CicleResource"
+                }
+            },
+            "EmpresaResource": {
+                "title": "Empresa",
+                "description": "Dades d'empresa",
+                "properties": {
+                    "id": {
+                        "title": "id",
+                        "description": "Identificador d'empresa",
+                        "type": "integer",
+                        "example": "6"
+                    },
+                    "cif": {
+                        "title": "cif",
+                        "description": "CIF de l'empresa",
+                        "type": "string",
+                        "example": "B14567890"
+                    },
+                    "nombre": {
+                        "title": "nombre",
+                        "description": "Nom de l'empresa",
+                        "type": "string",
+                        "example": "AITEX"
+                    },
+                    "apellidos": {
+                        "title": "apelllidos",
+                        "description": "Cognoms de l'alumne",
+                        "type": "string",
+                        "example": "Miró García"
+                    },
+                    "domicilio": {
+                        "title": "domicilio",
+                        "description": "Adreça de l'alumne",
+                        "type": "string",
+                        "example": "C/Cid 14"
+                    },
+                    "info": {
+                        "title": "info",
+                        "description": "Info de l'alumne",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "bolsa": {
+                        "title": "bolsa",
+                        "description": "bolsa",
+                        "type": "boolean",
+                        "example": "0"
+                    },
+                    "cv_enlace": {
+                        "title": "cv_enlace",
+                        "description": "Enllaç al curriculum de l'alumne",
+                        "type": "string",
+                        "example": "https://www.pepebotera.com"
+                    },
+                    "telefono": {
+                        "title": "telefono",
+                        "description": "Telèfon de l'alumne",
+                        "type": "string",
+                        "example": "666666666"
+                    },
+                    "email": {
+                        "title": "email",
+                        "description": "Email de l'alumne",
+                        "type": "string",
+                        "example": "pepe.botera@gmail.com"
+                    },
+                    "ciclos": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AlumnoCicloResource"
+                        }
+                    },
+                    "created_at": {
+                        "title": "created_at",
+                        "description": "Hora de creació registre",
+                        "type": "time",
+                        "example": "2022-03-17 19:37:34"
+                    },
+                    "updated_at": {
+                        "title": "updated_at",
+                        "description": "Hora de modificació registre",
+                        "type": "time",
+                        "example": "2022-03-17 19:37:34"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Empresa"
                 }
             },
             "LoginResource": {

@@ -9,9 +9,10 @@ namespace App\Http\Controllers\Api;
  * description="Torna les dades dels menu que li correspon a l'usuari",
  * operationId="indexMenu",
  * tags={"menu"},
+ * security={ {"apiAuth": {} }},
  * @OA\Response(
  *    response=200,
- *    description="Menu de l'aplicatiu",
+ *    description="Menu de l'aplicatiu segons permis",
  *    @OA\JsonContent(
  *        @OA\Property(
  *          property="data",
@@ -32,11 +33,8 @@ class MenuController extends ApiBaseController
     }
 
     public function index(){
-        return $this->resource::collection($this->entity::orderBy('order')->get());
-//        return AuthUser();
-        if (isset(AuthUser()->id)) return $this->resource::collection($this->entity::where('rol','!=',9999)->orderBy('order')->get());
-        //return $this->resource::collection->$this->entity::isRol(AuthUser()->rol)->orderBy('order')->get());
-        return $this->resource::collection($this->entity::where('rol',9999)->orderBy('order')->get());
+        $rolUser = AuthUser()->rol;
+        return $this->resource::collection($this->entity::whereRaw('rol % ? = 0',[$rolUser])->orderBy('order')->get());
     }
 
 }
