@@ -13,7 +13,6 @@ use App\Models\Ciclo;
  * description="Torna les dades dels cicles",
  * operationId="indexCicles",
  * tags={"cicles"},
- * security={ {"apiAuth": {} }},
  * @OA\Response(
  *    response=200,
  *    description="Cicles",

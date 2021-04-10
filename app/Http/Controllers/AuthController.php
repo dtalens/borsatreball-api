@@ -143,7 +143,7 @@ class AuthController extends Controller
             throw new AuthenticationException('Unauthorized');
         }
 
-        return response()->json(new LoginResource($request->user()), 200);
+        return new LoginResource($request->user());
     }
 
     public function logout(Request $request)

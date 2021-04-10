@@ -24,18 +24,24 @@ Route::group(['prefix' => 'auth'], function () {
     });
 });
 
+Route::get('ciclos','Api\CicloController@index');
+Route::get('users/{email}/available','Api\UserController@isEmailAvailable');
+
 Route::group(['middleware' => 'auth:api'], function() {
     Route::get('/menu', 'Api\MenuController@index');
     Route::apiResources(
         [   'alumnos'   => 'Api\AlumnoController',
             'empresas'  => 'Api\EmpresaController',
-            'ciclos'    =>'Api\CicloController'
         ],
         ['except' => ['destroy']]);
     Route::apiResources(
         [   'users' => 'Api\UserController',
             'ofertas' => 'Api\OfertaController',
         ]);
+    Route::apiResources(
+        [   'ciclos'    =>'Api\CicloController'
+        ],
+        ['except' => ['destroy','index']]);
     Route::put('ofertas/{id}/validar','Api\OfertaController@Valida');
     Route::put('ofertas/{id}/alumno', 'Api\OfertaController@AlumnoInterested');
     // Modificada

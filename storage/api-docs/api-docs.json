@@ -283,12 +283,7 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "apiAuth": []
-                    }
-                ]
+                }
             },
             "post": {
                 "tags": [
@@ -452,7 +447,7 @@
                 "operationId": "indexMenu",
                 "responses": {
                     "200": {
-                        "description": "Menu de l'aplicatiu",
+                        "description": "Menu de l'aplicatiu segons permis",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -462,6 +457,48 @@
                                             "items": {
                                                 "$ref": "#/components/schemas/MenuResource"
                                             }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/users/{email}/available": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Mira si el email està disponible",
+                "description": "Mira si el email està disponible",
+                "operationId": "showDisponible",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Boolean",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "title": "available",
+                                            "description": "Esta el email disponible",
+                                            "type": "boolean",
+                                            "example": false
                                         }
                                     },
                                     "type": "object"

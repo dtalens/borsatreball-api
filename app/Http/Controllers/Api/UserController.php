@@ -3,7 +3,39 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Models\User;
+
+
+/**
+* @OA\Get(
+ * path="/api/users/{email}/available",
+ * summary="Mira si el email està disponible",
+ * description="Mira si el email està disponible",
+ * operationId="showDisponible",
+ * tags={"users"},
+ * @OA\Parameter(
+ *          name="email",
+ *          in="path",
+ *          required=true,
+ * ),
+ * @OA\Response(
+ *    response=200,
+ *    description="Boolean",
+ *    @OA\JsonContent(
+ *        @OA\Property(
+ *          property="data",
+ *          title="available",
+ *          description="Esta el email disponible",
+ *          example=false,
+ *          type="boolean"
+ *       )
+ *    )
+ *   )
+ * )
+ */
+
 
 
 class UserController extends ApiBaseController
@@ -33,6 +65,12 @@ class UserController extends ApiBaseController
         if (AuthUser()->isAlumno()) $id = AuthUser()->id;
 
         return parent::update($request,$id);
+    }
+
+    public function isEmailAvailable($email){
+        return response()->json([
+            'data' => !User::where('email',$email)->count()
+        ], 200);
     }
 
 }
