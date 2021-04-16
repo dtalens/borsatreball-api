@@ -28,52 +28,23 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *      example="AITEX",
  *      type="string"),
  *     @OA\Property(
- *      property = "apellidos",
- *      title="apelllidos",
- *      description="Cognoms de l'alumne",
- *      example="Miró García",
- *      type="string"),
- *     @OA\Property(
  *      property = "domicilio",
  *      title="domicilio",
  *      description="Adreça de l'alumne",
  *      example="C/Cid 14",
  *      type="string"),
  *     @OA\Property(
- *      property = "info",
- *      title="info",
- *      description="Info de l'alumne",
- *      example="1",
- *      type="boolean"),
- *     @OA\Property(
- *      property = "bolsa",
- *      title="bolsa",
- *      description="bolsa",
- *      example="0",
- *      type="boolean"),
- *     @OA\Property(
- *      property = "cv_enlace",
- *      title="cv_enlace",
- *      description="Enllaç al curriculum de l'alumne",
- *      example="https://www.pepebotera.com",
- *      type="string") ,
- *     @OA\Property(
  *      property = "telefono",
  *      title="telefono",
- *      description="Telèfon de l'alumne",
+ *      description="Telèfon de l'empresa",
  *      example="666666666",
  *      type="string"),
  *     @OA\Property(
  *      property = "email",
  *      title="email",
- *      description="Email de l'alumne",
- *      example="pepe.botera@gmail.com",
+ *      description="Email de l'empresa",
+ *      example="info@aitex.es",
  *      type="string"),
- *     @OA\Property(
- *      property = "ciclos",
- *      type="array",
- *      @OA\Items(ref="#/components/schemas/AlumnoCicloResource")
- *      ),
  *     @OA\Property(
  *      property = "created_at",
  *      title="created_at",

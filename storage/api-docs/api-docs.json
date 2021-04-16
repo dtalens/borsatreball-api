@@ -437,6 +437,192 @@
                 ]
             }
         },
+        "/api/empresas": {
+            "get": {
+                "tags": [
+                    "empreses"
+                ],
+                "summary": "Dades de les empreses",
+                "description": "Torna les dades de les empreses",
+                "operationId": "indexEmpreses",
+                "responses": {
+                    "200": {
+                        "description": "Empreses segons el permis",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/EmpresaResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "empreses"
+                ],
+                "summary": "Guardar empresa",
+                "description": "Guardar perfil empresa",
+                "operationId": "storeEmpreses",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmpresaStoreRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Empresa correctament donada d'alta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmpresaResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Credencials no vàlides"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/empresas/{id}": {
+            "get": {
+                "tags": [
+                    "empreses"
+                ],
+                "summary": "Dades d'una empresa",
+                "description": "Torna les dades d'una empresa",
+                "operationId": "showEmpresa",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Empresa si te permis",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/EmpresaResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "empreses"
+                ],
+                "summary": "Modificar empresa",
+                "description": "Modificar perfil empresa",
+                "operationId": "updateEmpreses",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmpresaStoreRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Empresa correctament donat d'alta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmpresaResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Credencials no vàlides"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
         "/api/menu": {
             "get": {
                 "tags": [
@@ -744,6 +930,70 @@
                 "type": "object",
                 "xml": {
                     "name": "Ciclo"
+                }
+            },
+            "EmpresaStoreRequest": {
+                "title": "Empresa",
+                "description": "Fillable Empresa",
+                "properties": {
+                    "id": {
+                        "title": "id",
+                        "description": "Identificador d'empresa",
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "nombre": {
+                        "title": "nombre",
+                        "description": "Nom de l'alumne",
+                        "type": "string",
+                        "example": "Jose Manuel"
+                    },
+                    "domicilio": {
+                        "title": "domicilio",
+                        "description": "Adreça de l'alumne",
+                        "type": "string",
+                        "example": "C/Cid 14"
+                    },
+                    "telefono": {
+                        "title": "telefono",
+                        "description": "Telèfon de l'alumne",
+                        "type": "string",
+                        "example": "666666666"
+                    },
+                    "cif": {
+                        "title": "cif",
+                        "description": "Cif de l'empresa",
+                        "type": "string",
+                        "example": "A12345678"
+                    },
+                    "localidad": {
+                        "title": "localidad",
+                        "description": "Localidad de l'empresa",
+                        "type": "string",
+                        "example": "Alcoi"
+                    },
+                    "contacto": {
+                        "title": "contacto",
+                        "description": "Persona de contacte de l'empresa",
+                        "type": "string",
+                        "example": "Pepe Botera"
+                    },
+                    "web": {
+                        "title": "web",
+                        "description": "Pagina web de l'empresa",
+                        "type": "string",
+                        "example": "http://www.pepebotera.com"
+                    },
+                    "descripcion": {
+                        "title": "descripcion",
+                        "description": "Descripció de l'empresa",
+                        "type": "string",
+                        "example": "Chapuzas a domicilio"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Empresa"
                 }
             },
             "UserStoreRequest": {
@@ -1057,53 +1307,23 @@
                         "type": "string",
                         "example": "AITEX"
                     },
-                    "apellidos": {
-                        "title": "apelllidos",
-                        "description": "Cognoms de l'alumne",
-                        "type": "string",
-                        "example": "Miró García"
-                    },
                     "domicilio": {
                         "title": "domicilio",
                         "description": "Adreça de l'alumne",
                         "type": "string",
                         "example": "C/Cid 14"
                     },
-                    "info": {
-                        "title": "info",
-                        "description": "Info de l'alumne",
-                        "type": "boolean",
-                        "example": "1"
-                    },
-                    "bolsa": {
-                        "title": "bolsa",
-                        "description": "bolsa",
-                        "type": "boolean",
-                        "example": "0"
-                    },
-                    "cv_enlace": {
-                        "title": "cv_enlace",
-                        "description": "Enllaç al curriculum de l'alumne",
-                        "type": "string",
-                        "example": "https://www.pepebotera.com"
-                    },
                     "telefono": {
                         "title": "telefono",
-                        "description": "Telèfon de l'alumne",
+                        "description": "Telèfon de l'empresa",
                         "type": "string",
                         "example": "666666666"
                     },
                     "email": {
                         "title": "email",
-                        "description": "Email de l'alumne",
+                        "description": "Email de l'empresa",
                         "type": "string",
-                        "example": "pepe.botera@gmail.com"
-                    },
-                    "ciclos": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/AlumnoCicloResource"
-                        }
+                        "example": "info@aitex.es"
                     },
                     "created_at": {
                         "title": "created_at",
