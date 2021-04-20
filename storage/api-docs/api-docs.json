@@ -741,15 +741,15 @@
                             }
                         }
                     },
-                    "422": {
+                    "421": {
                         "description": "Wrong credentials response",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "error": {
+                                        "message": {
                                             "type": "string",
-                                            "example": "Credencials no vàlides"
+                                            "example": "Login or password are wrong."
                                         }
                                     },
                                     "type": "object"
@@ -802,7 +802,7 @@
                                         },
                                         "errors": {
                                             "type": "string",
-                                            "example": "['email'=>'The field email is required.]"
+                                            "example": "['email'=>'The field email is required.']"
                                         }
                                     },
                                     "type": "object"
@@ -1351,41 +1351,49 @@
                 "title": "Login Resource",
                 "description": "Resposta al Login correcte",
                 "properties": {
-                    "access_token": {
-                        "title": "access_token",
-                        "description": "Token d'accès",
-                        "type": "string",
-                        "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI2IiwianRpIjoiNGY4YjE5OTMzNjQxZjVjMDVjNmU1MGE3MGQxNmE5M2ZkYWZmNjkwZDI5M2Y3MTU2NzM5NTkwMDM5YWFhM2FiZDcw"
-                    },
-                    "rol": {
-                        "title": "rol",
-                        "description": "Rol d'usuari",
-                        "type": "integer",
-                        "example": "2"
-                    },
-                    "token_type": {
-                        "title": "token_type",
-                        "description": "Tipus de token",
-                        "type": "string",
-                        "example": "Bearer"
-                    },
-                    "id": {
-                        "title": "id",
-                        "description": "id d'usuari",
-                        "type": "integer",
-                        "example": "12"
-                    },
-                    "name": {
-                        "title": "name",
-                        "description": "Nom de l'usuari",
-                        "type": "string",
-                        "example": "Ignasi"
-                    },
-                    "expires_at": {
-                        "title": "expires_at",
-                        "description": "Hora caducitat token",
-                        "type": "time",
-                        "example": "2022-03-17 19:37:34"
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "access_token": {
+                                    "title": "access_token",
+                                    "description": "Token d'accès",
+                                    "type": "string",
+                                    "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI2IiwianRpIjoiNGY4YjE5OTMzNjQxZjVjMDVjNmU1MGE3MGQxNmE5M2ZkYWZmNjkwZDI5M2Y3MTU2NzM5NTkwMDM5YWFhM2FiZDcw"
+                                },
+                                "rol": {
+                                    "title": "rol",
+                                    "description": "Rol d'usuari",
+                                    "type": "integer",
+                                    "example": "2"
+                                },
+                                "token_type": {
+                                    "title": "token_type",
+                                    "description": "Tipus de token",
+                                    "type": "string",
+                                    "example": "Bearer"
+                                },
+                                "id": {
+                                    "title": "id",
+                                    "description": "id d'usuari",
+                                    "type": "integer",
+                                    "example": "12"
+                                },
+                                "name": {
+                                    "title": "name",
+                                    "description": "Nom de l'usuari",
+                                    "type": "string",
+                                    "example": "Ignasi"
+                                },
+                                "expires_at": {
+                                    "title": "expires_at",
+                                    "description": "Hora caducitat token",
+                                    "type": "time",
+                                    "example": "2022-03-17 19:37:34"
+                                }
+                            },
+                            "type": "object"
+                        }
                     }
                 },
                 "type": "object",

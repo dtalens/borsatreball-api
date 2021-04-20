@@ -11,11 +11,10 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\UnauthorizedException;
-use Illuminate\Validation\ValidationException;
-use function PHPUnit\Framework\throwException;
+use App\Notifications\SignupActivate;
+
 
 /**
  * @OA\Post(
@@ -39,10 +38,10 @@ use function PHPUnit\Framework\throwException;
  *    @OA\JsonContent(ref="#/components/schemas/LoginResource")
  * ),
  * @OA\Response(
- *    response=422,
+ *    response=421,
  *    description="Wrong credentials response",
  *    @OA\JsonContent(
- *       @OA\Property(property="error", type="string", example="Credencials no vàlides")
+ *       @OA\Property(property="message", type="string", example="Login or password are wrong.")
  *        )
  *     )
  * )
@@ -105,29 +104,15 @@ class AuthController extends Controller
                 throw new UnauthorizedException('The given rol was invalid.');
             }
         });
-        //$user->notify(new SignupActivate($user));
-        return response()->json($this->getToken($user), 201);
-    }
-
-    public function signupActivate($token)
-    {
-        $user = User::where('activation_token', $token)->first();
-        if (!$user) {
-            return response()->json(['message' => 'El token de activación es inválido'], 404);
-        }
-        $user->active = true;
-        $user->activation_token = '';
-        $user->save();
-
-        return redirect('/');
+        $this->getToken($user);
+        $user->notify(new SignupActivate($user));
+        return new LoginResource($user);
     }
 
     private function getToken($user){
         $tokenResult = $user->createToken('Token Acceso Personal');
         $token = $tokenResult->token;
         $token->save();
-
-        return new LoginResource($user,$tokenResult);
     }
 
     public function login(Request $request)
@@ -140,7 +125,7 @@ class AuthController extends Controller
         $credentials['active'] = 1;
 
         if (!Auth::attempt($credentials)) {
-            throw new AuthenticationException('Unauthorized');
+            throw new AuthenticationException('Login or password are wrong.');
         }
 
         return new LoginResource($request->user());
@@ -153,8 +138,5 @@ class AuthController extends Controller
             'Successfully logged out']);
     }
 
-    public function user(Request $request)
-    {
-        return response()->json($request->user());
-    }
+
 }
