@@ -22,6 +22,7 @@ use Illuminate\Routing\Controller as BaseController;
  *     scheme="bearer",
  *     securityScheme="apiAuth",
  * )
+ *
  */
 
 class Controller extends BaseController

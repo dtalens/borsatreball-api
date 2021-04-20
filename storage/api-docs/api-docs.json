@@ -791,14 +791,18 @@
                         }
                     },
                     "422": {
-                        "description": "Wrong credentials response",
+                        "description": "Dades invalides",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "error": {
+                                        "message": {
                                             "type": "string",
-                                            "example": "Credencials no vàlides"
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "string",
+                                            "example": "['email'=>'The field email is required.]"
                                         }
                                     },
                                     "type": "object"

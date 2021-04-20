@@ -7,13 +7,15 @@ use App\Models\Alumno;
 use App\Models\Empresa;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Resources\LoginResource;
-use Carbon\Carbon;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Notifications\SignupActivate;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\UnauthorizedException;
+use Illuminate\Validation\ValidationException;
+use function PHPUnit\Framework\throwException;
 
 /**
  * @OA\Post(
@@ -66,11 +68,12 @@ use Illuminate\Support\Str;
  * ),
  * @OA\Response(
  *    response=422,
- *    description="Wrong credentials response",
+ *    description="Dades invalides",
  *    @OA\JsonContent(
- *       @OA\Property(property="error", type="string", example="Credencials no vàlides")
- *        )
+ *       @OA\Property(property="message", type="string", example="The given data was invalid."),
+ *       @OA\Property(property="errors", type="string", example="['email'=>'The field email is required.']")
  *     )
+ * )
  * )
  */
 
@@ -88,16 +91,21 @@ class AuthController extends Controller
 
         DB::transaction(function () use ($user,$request) {
             $user->save();
-            if ($user->isAlumno()) Alumno::create(['nombre' => $request->nombre, 'id' => $user->id,
-                'domicilio'=>$request->domicilio,'telefono'=>$request->telefono,
-                'apellidos'=>$request->apellidos,'info'=>$request->info,'bolsa'=>$request->bolsa,
-                'cv_enlace'=>$request->cv_enlace]);
-            if ($user->isEmpresa()) Empresa::create(['nombre' => $request->nombre, 'id' => $user->id,
+            if ($user->isAlumno()){
+                Alumno::create(['nombre' => $request->nombre, 'id' => $user->id,
+                    'domicilio'=>$request->domicilio,'telefono'=>$request->telefono,
+                    'apellidos'=>$request->apellidos,'info'=>$request->info??0,'bolsa'=>$request->bolsa??0,
+                    'cv_enlace'=>$request->cv_enlace]);
+            } elseif ($user->isEmpresa()) {
+                Empresa::create(['nombre' => $request->nombre, 'id' => $user->id,
                 'domicilio'=>$request->domicilio,'telefono'=>$request->telefono,
                 'cif'=>$request->cif,'localidad'=>$request->localidad,'contacto'=>$request->contacto,
                 'web'=>$request->web,'descripcion'=>$request->descripcion]);
+            } else {
+                throw new UnauthorizedException('The given rol was invalid.');
+            }
         });
-        $user->notify(new SignupActivate($user));
+        //$user->notify(new SignupActivate($user));
         return response()->json($this->getToken($user), 201);
     }
 
@@ -119,15 +127,7 @@ class AuthController extends Controller
         $token = $tokenResult->token;
         $token->save();
 
-        //return new LoginResource($user,$tokenResult);
-        return[
-            'access_token' => $tokenResult->accessToken,
-            'rol'          => $user->rol,
-            'token_type'   => 'Bearer',
-            'id'           => $user->id,
-            'expires_at'   => Carbon::parse(
-                $token->expires_at)
-                ->toDateTimeString()];
+        return new LoginResource($user,$tokenResult);
     }
 
     public function login(Request $request)

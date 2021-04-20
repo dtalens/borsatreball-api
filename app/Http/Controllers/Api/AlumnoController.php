@@ -164,7 +164,7 @@ use function PHPUnit\Framework\throwException;
 
 class AlumnoController extends ApiBaseController
 {
-    //use traitRelation;
+    use traitRelation;
 
     public function model(){
         return 'Alumno';
