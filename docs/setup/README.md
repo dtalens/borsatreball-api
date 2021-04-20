@@ -11,7 +11,7 @@ git clone https://github.com/cipfpbatoi/borsatreball-api.git
 
 ## Desplegament per a producció del backend
 Si només volem tindre l'aplicació funcionant necessitem un servidor on instal·larem:
-* **apache2**
+* **apache2 o nginx**
 * **mysql-server** o **mariadb-server**
 * **php**
 * **phpmyadmin**
@@ -31,7 +31,8 @@ mysql> SELECT User, Host, plugin, authentication_string FROM mysql.user;
 # Creem la base de dades
 mysql> CREATE DATABASE borsatreball;
 # i li donem privilegis a l'usuari
-mysql> GRANT ALL PRIVILEGES ON borsatreball.* TO nomusuari@localhost;
+mysql> GRANT ALL ON borsatreball.* TO 'nomusuari'@'localhost' IDENTIFIED BY 'P@ssw0rd' WITH GRANT OPTION;
+mysql> FLUSH PRIVILEGES;
 mysql> exit;
 ```
 
@@ -81,6 +82,59 @@ Habilitem els sites si els hem creat nous:
 ```bash
 sudo a2ensite borsa.conf
 sudo a2ensite borsa-ssl.conf
+```
+
+### Configuracio alternativa amb nginx
+Creem una fitxer amb:
+```bash
+sudo nano /etc/nginx/sites-available/borsa.conf
+```
+Peguem el següent contingut:
+```bash
+server {
+    listen 80;
+    server_name borsa.my;
+    root /var/www//borsaBatoi/public;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Content-Type-Options "nosniff";
+
+    index index.html index.htm index.php;
+
+    charset utf-8;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    error_page 404 /index.php;
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}
+```
+
+Després creem un enllaç simbòlic a la carpeta de llocs actius:
+```bash
+sudo ln -s /etc/nginx/sites-available/borsa.conf /etc/nginx/sites-enabled/
+```
+Per útlim comprovem si tot el correcte i recarreguem el servici:
+```bash
+sudo service nginx configtest
+sudo service nginx reload
+sudo service nginx restart
 ```
 
 Posem el nostre domini en el **/etc/hosts**:
