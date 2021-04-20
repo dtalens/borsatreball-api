@@ -130,7 +130,7 @@ Després creem un enllaç simbòlic a la carpeta de llocs actius:
 ```bash
 sudo ln -s /etc/nginx/sites-available/borsa.conf /etc/nginx/sites-enabled/
 ```
-Per útlim comprovem si tot el correcte i recarreguem el servici:
+Per útlim comprovem si tot és correcte i recarreguem el servici:
 ```bash
 sudo service nginx configtest
 sudo service nginx reload
