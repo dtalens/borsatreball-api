@@ -20,7 +20,14 @@ namespace App\Http\Controllers\Api;
  *          @OA\Items(ref="#/components/schemas/MenuResource")
  *        )
  *    )
- *   )
+ *   ),
+ *  @OA\Response(
+ *    response=421,
+ *    description="Unauthenticated",
+ *    @OA\JsonContent(
+ *       @OA\Property(property="message", type="string", example="Unauthenticated."),
+ *     )
+ *  )
  * )
  */
 
