@@ -6,15 +6,11 @@ use App\Http\Requests\AlumnoCicloUpdateRequest;
 use App\Models\Ciclo;
 use App\Http\Requests\AlumnoStoreRequest;
 use App\Http\Resources\AlumnoResource;
-
-use Illuminate\Http\Request;
-
 use App\Models\Alumno;
 use App\Notifications\ValidateStudent;
-
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Auth\AuthenticationException;
-use function PHPUnit\Framework\throwException;
+use Illuminate\Database\Eloquent\Collection;
 
 
 /**
@@ -194,7 +190,7 @@ class AlumnoController extends ApiBaseController
             return AlumnoResource::collection(Alumno::BelongsToCicles(Ciclo::where('responsable', AuthUser()->id)->get()));
         }
         if (AuthUser()->isAlumno()) {
-            return AlumnoResource::collection(Alumno::where('id', AuthUser()->id)->get());
+            return AlumnoResource::collection(Alumno::where('id',AuthUser()->id)->get());
         }
         if (AuthUser()->isEmpresa()) {
             return AlumnoResource::collection(Alumno::InterestedIn(AuthUser()->id));
@@ -210,7 +206,7 @@ class AlumnoController extends ApiBaseController
         if (AuthUser()->id == $id){
             return parent::show($id);
         } else {
-            throw new UnauthorizedException('No tens permisos');
+            throw new UnauthorizedException('Forbidden.');
         }
     }
 

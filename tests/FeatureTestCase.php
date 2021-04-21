@@ -15,12 +15,23 @@ class FeatureTestCase extends TestCase
     const ALUMNO_ROL = 7;
     const EMPRESA_ROL = 5;
     const ADMIN_ROL = 2;
+    const RESPONSABLE_ROL = 3;
     const FAKE_ROL = 37;
 
-    protected function actingAsRol($rol,$rutas){
+    protected function actingAsRol($rol){
+        $user =  User::where('rol',$rol)->first();
         Passport::actingAs(
-            User::where('rol',$rol)->first(),
-            $rutas);
+            $user,
+            []);
+        return $user;
+    }
+
+    protected function actingAsUser($id_user){
+        $user =  User::find($id_user);
+        Passport::actingAs(
+            $user,
+            []);
+        return $user;
     }
     protected function getDataFromJson($method,$route){
         return $this->json($method, $route)
