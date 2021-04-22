@@ -56,6 +56,14 @@ use Illuminate\Foundation\Http\FormRequest;
  *      description="Telèfon de l'alumne",
  *      example="666666666",
  *      type="string"),
+ *     @OA\Property(
+ *      property = "ciclos",
+ *      title="cicles",
+ *      description="Cicles de l'alumne",
+ *      type="array",
+ *      example = "[2,4]",
+ *     @OA\Items(),
+ *      ) ,
  *    )
  */
 
@@ -78,6 +86,9 @@ class AlumnoStoreRequest extends FormRequest
      */
     public function rules()
     {
-        return ['nombre'=> 'required'];
+        return [
+            'nombre'=> 'required',
+            'apellidos' => 'required'
+            ];
     }
 }

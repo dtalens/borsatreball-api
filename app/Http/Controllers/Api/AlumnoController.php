@@ -10,8 +10,6 @@ use App\Models\Alumno;
 use App\Notifications\ValidateStudent;
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\Eloquent\Collection;
-
 
 /**
  * @OA\Get(
@@ -213,11 +211,13 @@ class AlumnoController extends ApiBaseController
     public function update(AlumnoStoreRequest $request, $id)
     {
         if (AuthUser()->id == $id){
-            $registro = Alumno::findOrFail($id);
-            return $this->manageResponse($registro->update($request->all()));
+            $alumno = Alumno::findOrFail($id);
+            $alumno->update($request->except(['id']));
+            $alumno->Ciclos()->sync($request->ciclos);
+            return AlumnoResource::collection(Alumno::where('id',AuthUser()->id)->get());
         }
         else {
-            throw new UnauthorizedException('No tens permisos:'.$id);
+            throw new UnauthorizedException('Forbidden.');
         }
     }
 

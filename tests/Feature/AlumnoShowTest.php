@@ -8,14 +8,14 @@ use App\Models\Alumno;
 class AlumnoShowTest extends FeatureTestCase
 {
     const PETITION = 'api/alumnos';
-    const FIELDS = ['id','nombre','apellidos','domicilio','info','bolsa','cv_enlace','telefono','email','ciclos','created_at','updated_at'];
+    const FIELDS = ['id','nombre','apellidos','domicilio','info','bolsa','cv_enlace','telefono','email','ciclos'];
     const ID_EMPRESA_WITHOUT_OFFERS = 6;
     /**
      * A basic feature test example.
      *
      * @return void
      */
-    public function testUnAuthenticated()
+    public function testUnauthenticated()
     {
         $this->seed();
         $this->json('GET', self::PETITION)
@@ -68,7 +68,14 @@ class AlumnoShowTest extends FeatureTestCase
         $this->actingAsRol(self::ALUMNO_ROL);
         $item = $this->getDataFromJson('GET',self::PETITION)[0];
         $this->assertEquals(self::FIELDS,array_keys($item));
+    }
 
+    public function testReturnCiclos()
+    {
+        $this->seed();
+        $this->actingAsRol(self::ALUMNO_ROL);
+        $item = $this->getDataFromJson('GET',self::PETITION)[0]['ciclos'];
+        $this->assertEquals(3,count($item));
     }
 
     public function testErrorAnotherShow()
@@ -89,5 +96,7 @@ class AlumnoShowTest extends FeatureTestCase
         $this->json('GET', self::PETITION.'/3')
             ->assertStatus(200);
     }
+
+
 
 }

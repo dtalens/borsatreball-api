@@ -11,7 +11,7 @@ class MenuShowTest extends FeatureTestCase
     const PETITION = 'api/menu';
     const FIELDS = ['id','order','icon','text','path','rol','parent','model','active','comments','icon_alt'];
 
-    public function testUnAuthenticated()
+    public function testUnauthenticated()
     {
         $this->seed();
         $this->json('GET', self::PETITION)

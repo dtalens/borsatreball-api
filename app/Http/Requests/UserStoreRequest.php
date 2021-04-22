@@ -106,6 +106,14 @@ use Illuminate\Foundation\Http\FormRequest;
  *      description="Enllaç al curriculum de l'alumne",
  *      example="https://www.pepebotera.com",
  *      type="string") ,
+ *     @OA\Property(
+ *      property = "ciclos",
+ *      title="cicles",
+ *      description="Cicles de l'alumne",
+ *      type="array",
+ *      example = "[2,4]",
+ *     @OA\Items(),
+ *      ) ,
  *
  *    )
  */
@@ -151,7 +159,8 @@ class UserStoreRequest extends FormRequest
             'apellidos' => 'requiredIf:rol,'.config('role.alumno'),
             'info' => 'exclude_if:rol,'.config('role.empresa'),
             'bolsa' => 'exclude_if:rol,'.config('role.empresa'),
-            'cv_enlace' => 'exclude_if:rol,'.config('role.empresa')
+            'cv_enlace' => 'exclude_if:rol,'.config('role.empresa'),
+            'ciclos' => 'requiredIf:rol,'.config('role.alumno')
         ];
     }
 }

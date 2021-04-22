@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\FeatureTestCase;
 
 
-class AuthTest extends FeatureTestCase
+class RegisterTest extends FeatureTestCase
 {
 
     /**
@@ -71,7 +71,7 @@ class AuthTest extends FeatureTestCase
             ]);
     }
 
-    public function testSuccessfulAlumnoRegistration()
+    public function testFailAlumnoWithOutCiclosRegistration()
     {
 
         $alumnoData = [
@@ -86,7 +86,33 @@ class AuthTest extends FeatureTestCase
 
         ];
         $this->seed();
-        $this->json('POST', 'api/auth/signup', $alumnoData, ['Accept' => 'application/json'])
+        $this->json('POST', '/api/auth/signup',$alumnoData, ['Accept' => 'application/json'])
+            ->assertStatus(422)
+            ->assertJson([
+                "message" => "The given data was invalid.",
+                "errors" => [
+                    "ciclos" => ["The ciclos field is required when rol is ".self::ALUMNO_ROL."."],
+                ]
+            ]);
+    }
+
+    public function testSuccessfulAlumnoWithCiclosRegistration()
+    {
+
+        $alumnoData = [
+            "nombre" => "John",
+            "email" => "doe@example.com",
+            "domicilio" => 'C/Cid 99',
+            "telefono" => "543345657",
+            "apellidos" => "Doe",
+            'rol' => self::ALUMNO_ROL,
+            'ciclos' => [2,4],
+            "password" => "demo12345",
+            "password_confirmation" => "demo12345",
+
+        ];
+        $this->seed();
+        $id = $this->json('POST', 'api/auth/signup', $alumnoData, ['Accept' => 'application/json'])
             ->assertStatus(201)
             ->assertJsonStructure([
                 "data" => [
@@ -96,7 +122,14 @@ class AuthTest extends FeatureTestCase
                     "id",
                     "name",
                     "expires_at" ]
-            ]);
+            ])
+            ->decodeResponseJson()
+            ->json()['data']['id'];
+        $this->actingAsRol(self::ADMIN_ROL);
+
+        $alumno = $this->getDataFromJson('GET','api/alumnos')[2];
+        $this->assertEquals(2,$alumno['ciclos'][0]['id_ciclo']);
+        $this->assertEquals(4,$alumno['ciclos'][1]['id_ciclo']);
     }
 
     public function testDuplicateEmailRegistration()
@@ -109,6 +142,7 @@ class AuthTest extends FeatureTestCase
             "telefono" => "543345657",
             "apellidos" => "Doe",
             'rol' => self::ALUMNO_ROL,
+            'ciclos' => [2],
             "password" => "demo12345",
             "password_confirmation" => "demo12345",
 
@@ -179,38 +213,6 @@ class AuthTest extends FeatureTestCase
             ]);
     }
 
-    public function testSuccesfulLogin(){
-        $loginData = [
-            "email" => "igomis@cipfpbatoi.es",
-            "password" => "eiclmp5a",
-        ];
 
-        $this->seed();
-        $this->json('POST','api/auth/login',$loginData,['Accept' => 'application/json'])
-            ->assertStatus(200)
-            ->assertJsonStructure([
-                "data" => [
-                "access_token",
-                "rol",
-                "token_type",
-                "id",
-                "name",
-                "expires_at" ]
-            ]);
-    }
-
-    public function testFailLogin(){
-        $loginData = [
-            "email" => "igomis@cipfpbatoi.es",
-            "password" => "eiclmp5",
-        ];
-
-        $this->seed();
-        $this->json('POST','api/auth/login',$loginData,['Accept' => 'application/json'])
-            ->assertStatus(421)
-            ->assertJson([
-                "message" => "Login or password are wrong.",
-            ]);
-    }
 
 }

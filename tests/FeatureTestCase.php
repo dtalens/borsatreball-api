@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
 
-class FeatureTestCase extends TestCase
+abstract class FeatureTestCase extends TestCase
 {
     use RefreshDatabase;
 

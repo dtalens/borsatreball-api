@@ -33,7 +33,7 @@ Route::group(['middleware' => 'auth:api'], function() {
         [   'alumnos'   => 'Api\AlumnoController',
             'empresas'  => 'Api\EmpresaController',
         ],
-        ['except' => ['destroy']]);
+        ['except' => ['destroy','store']]);
     Route::apiResources(
         [   'users' => 'Api\UserController',
             'ofertas' => 'Api\OfertaController',

@@ -66,7 +66,6 @@ abstract class ApiBaseController extends Controller
     }*/
 
     protected function manageResponse($registro){
-
         return new $this->resource($registro);
     }
 

@@ -91,10 +91,11 @@ class AuthController extends Controller
         DB::transaction(function () use ($user,$request) {
             $user->save();
             if ($user->isAlumno()){
-                Alumno::create(['nombre' => $request->nombre, 'id' => $user->id,
+                $alumno = Alumno::create(['nombre' => $request->nombre, 'id' => $user->id,
                     'domicilio'=>$request->domicilio,'telefono'=>$request->telefono,
                     'apellidos'=>$request->apellidos,'info'=>$request->info??0,'bolsa'=>$request->bolsa??0,
                     'cv_enlace'=>$request->cv_enlace]);
+                $alumno->Ciclos()->sync($request->ciclos);
             } elseif ($user->isEmpresa()) {
                 Empresa::create(['nombre' => $request->nombre, 'id' => $user->id,
                 'domicilio'=>$request->domicilio,'telefono'=>$request->telefono,

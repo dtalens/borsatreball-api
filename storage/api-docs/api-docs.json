@@ -905,6 +905,13 @@
                         "description": "Telèfon de l'alumne",
                         "type": "string",
                         "example": "666666666"
+                    },
+                    "ciclos": {
+                        "title": "cicles",
+                        "description": "Cicles de l'alumne",
+                        "type": "array",
+                        "items": {},
+                        "example": "[2,4]"
                     }
                 },
                 "type": "object",
@@ -1118,6 +1125,13 @@
                         "description": "Enllaç al curriculum de l'alumne",
                         "type": "string",
                         "example": "https://www.pepebotera.com"
+                    },
+                    "ciclos": {
+                        "title": "cicles",
+                        "description": "Cicles de l'alumne",
+                        "type": "array",
+                        "items": {},
+                        "example": "[2,4]"
                     }
                 },
                 "type": "object",

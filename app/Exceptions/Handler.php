@@ -52,7 +52,7 @@ class Handler extends ExceptionHandler
                 }
                 else if ($exception instanceof QueryException) {
                     return response()->json(
-                        ['message' => 'SQL no vàlid: ' . $exception->getMessage()],
+                        ['message' => 'BD error.' , 'errors' => $exception->getMessage()],
                         500
                     );
                 }
