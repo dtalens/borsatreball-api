@@ -178,7 +178,7 @@ Donem permisos d'escriptura a l'usuari **www-data** sobre la carpeta storage i e
 ## Configurar el mail
 Nosaltres hem instal·lat **`exim4`** i hem creat en el sistema l'usuari `usrmail` per a enviar els correus. Configurem exim4 amb `dpkg-reconfigure exim4-config`. El fitxer /etc/exim4/update-exim4.conf.conf hauria de quedar-se:
 ```bash
-dc_eximconfig_configtype='satellite'    // o 'smartmail'
+dc_eximconfig_configtype='smartmail'    // o 'satellite'
 dc_other_hostnames=''
 dc_local_interfaces=''
 dc_readhost='borsa@nosaltres.com'
@@ -202,7 +202,7 @@ smtp.gmail.com:borsa@nosaltres.com:P@ssW0rd
 
 I en el fitxer **`.env`** configurem:
 ```bash
-MAIL_DRIVER=smtp
+MAIL_MAILER=smtp
 MAIL_HOST=localhost
 MAIL_PORT=25
 MAIL_USERNAME=usrmail
