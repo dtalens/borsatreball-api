@@ -6,7 +6,7 @@ use Tests\FeatureTestCase;
 
 
 
-class MenuShowTest extends FeatureTestCase
+class MenuIndexTest extends FeatureTestCase
 {
     const PETITION = 'api/menu';
     const FIELDS = ['id','order','icon','text','path','rol','parent','model','active','comments','icon_alt'];
@@ -14,11 +14,7 @@ class MenuShowTest extends FeatureTestCase
     public function testUnauthenticated()
     {
         $this->seed();
-        $this->json('GET', self::PETITION)
-            ->assertStatus(421)
-            ->assertJson([
-                "message" => "Unauthenticated.",
-            ]);
+        $this->expectedUnauthenticated('GET', self::PETITION);
     }
 
     public function testSuccessfulAlumno()

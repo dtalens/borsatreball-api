@@ -15,6 +15,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use function Symfony\Component\Translation\t;
 
 
@@ -35,7 +36,11 @@ abstract class ApiBaseController extends Controller
     }
 
     public function show($id){
-        return new $this->resource($this->entity::find($id));
+        if ($registre = $this->entity::find($id)) {
+            return new $this->resource($registre);
+        } else {
+            throw new NotFoundHttpException($this->model()." not found.");
+        }
     }
 
     public function destroy($id)

@@ -4,28 +4,30 @@ namespace Tests\Feature;
 
 use Tests\FeatureTestCase;
 
-class AlumnoModifyTest extends FeatureTestCase
+class AlumnosUpdateTest extends FeatureTestCase
 {
-    const PETITION = 'api/alumnos';
-    const FIELDS = ['id','nombre','apellidos','domicilio','info','bolsa','cv_enlace','telefono','email','ciclos'];
-    const ID_EMPRESA_WITHOUT_OFFERS = 6;
-
-
-    public function testSuccesfulUpdate(){
-        $alumnoData = [
+    const PETITION = 'api/alumnos/3';
+    const WRONG_PETITION = 'api/alumnos/4';
+    const METHOD = 'PUT';
+    const COMPLETE_DATA = [
             "nombre" => "John",
             "domicilio" => 'C/Cid 99',
             "telefono" => "543345657",
             "ciclos" => [16,18],
             "apellidos" => "Doe",
         ];
+    const INCOMPLETE_DATA = [
+        "nombre" => "John",
+    ];
+
+    public function testSuccesfulUpdate(){
+
         $this->seed();
         $user = $this->actingAsUser(3);
-        $this->json('PUT', self::PETITION.'/3',$alumnoData, ['Accept' => 'application/json'])
+        $this->json(self::METHOD, self::PETITION,SELF::COMPLETE_DATA, ['Accept' => 'application/json'])
             ->assertStatus(200)
             ->assertJson([
                 "data" => [
-                    [
                         "id" => 3,
                         "nombre" => "John",
                         "apellidos" => "Doe",
@@ -36,7 +38,19 @@ class AlumnoModifyTest extends FeatureTestCase
                         "telefono" => "543345657",
                         "email" => $user->email,
                         "ciclos" => [['id_alumno'=>3,'id_ciclo'=>16],['id_alumno'=>3,'id_ciclo'=>18]]
-                    ]]]);
+                    ]]);
+    }
+
+    public function testSuccesfulIncompleteData(){
+        $this->seed();
+        $user = $this->actingAsUser(3);
+        $this->json(self::METHOD, self::PETITION,SELF::INCOMPLETE_DATA, ['Accept' => 'application/json'])
+            ->assertStatus(200)
+            ->assertJson([
+                "data" => [
+                    "id" => 3,
+                    "nombre" => "John",
+                ]]);
     }
 
     public function testFailIfCicloNotExistsUpdate(){
@@ -49,28 +63,22 @@ class AlumnoModifyTest extends FeatureTestCase
         ];
         $this->seed();
         $user = $this->actingAsUser(3);
-        $this->json('PUT', self::PETITION.'/3',$alumnoData, ['Accept' => 'application/json'])
+        $this->json(self::METHOD, self::PETITION,$alumnoData, ['Accept' => 'application/json'])
             ->assertStatus(500)
             ->assertJson([
                 "message" => "BD error.",
             ]);
     }
 
-    public function testUpdateNotChangeID(){
-        $alumnoData = [
-            "id" => 4,
-            "nombre" => "John",
-            "domicilio" => 'C/Cid 99',
-            "telefono" => "543345657",
-            "apellidos" => "Doe",
-        ];
+    public function testUpdateNotChangeId(){
+        $alumnoData = self::COMPLETE_DATA;
+        $alumnoData['id'] = 4;
         $this->seed();
         $user = $this->actingAsUser(3);
-        $this->json('PUT', self::PETITION.'/3',$alumnoData, ['Accept' => 'application/json'])
+        $this->json(self::METHOD, self::PETITION,$alumnoData, ['Accept' => 'application/json'])
             ->assertStatus(200)
             ->assertJson([
                 "data" => [
-                    [
                         "id" => 3,
                         "nombre" => "John",
                         "apellidos" => "Doe",
@@ -80,25 +88,14 @@ class AlumnoModifyTest extends FeatureTestCase
                         "cv_enlace" => null,
                         "telefono" => "543345657",
                         "email" => $user->email,
-                    ]]]);
+                    ]]);
     }
 
-    public function testUnauhtorizeUpdate()
+    public function testUnauhtorizeUpdateFails()
     {
-        $alumnoData = [
-            "id" => 4,
-            "nombre" => "John",
-            "domicilio" => 'C/Cid 99',
-            "telefono" => "543345657",
-            "apellidos" => "Doe",
-        ];
         $this->seed();
         $this->actingAsUser(3);
-        $this->json('PUT', self::PETITION.'/4',$alumnoData, ['Accept' => 'application/json'])
-            ->assertStatus(405)
-            ->assertJson([
-                "message" => "Forbidden.",
-            ]);
+        $this->expectedForbidden(self::METHOD, self::WRONG_PETITION,self::COMPLETE_DATA);
     }
 
 }

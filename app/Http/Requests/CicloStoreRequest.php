@@ -34,10 +34,28 @@ use Illuminate\Foundation\Http\FormRequest;
  *      example="220",
  *      type="integer"),
  *     @OA\Property(
+ *      property = "cDept",
+ *      title="Departament Castellà",
+ *      description="Nom en castellà del departament",
+ *      example="Informática",
+ *      type="string"),
+ *     @OA\Property(
+ *      property = "vDept",
+ *      title="Departament Valencià",
+ *      description="Nom en valencià del departament",
+ *      example="Informàtica",
+ *      type="string"),
+ *     @OA\Property(
  *      property = "vCiclo",
  *      title="vCiclo",
- *      description="Info del cicle",
+ *      description="Informaciò del cicle",
  *      example="Diseeny d'aplicacion web",
+ *      type="string"),
+ *     @OA\Property(
+ *      property = "cCiclo",
+ *      title="cCiclo",
+ *      description="Información del ciclo",
+ *      example="Diseño de aplicaciones web",
  *      type="string"),
  *    )
  */
@@ -64,8 +82,12 @@ class CicloStoreRequest extends FormRequest
         return [
             'codigo' => 'required|string|max:4',
             'ciclo' => 'required|string|max:50',
-            'responsable' => 'exists|users:id',
-            'vCiclo' => 'required|string|max:80'
+            'responsable' => 'exists:users,id',
+            'Dept' => 'required|max:3',
+            'cDept' => 'required|max:50',
+            'vDept' => 'required|max:50',
+            'vCiclo' => 'string|max:80',
+            'cCiclo' => 'string|max:80'
         ];
     }
 }

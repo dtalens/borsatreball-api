@@ -191,22 +191,22 @@
                 ]
             }
         },
-        "/api/alumnos/{idAlumno}/ciclo/{idCiclo}": {
+        "/api/alumnos/{alumno}/ciclo/{id}": {
             "put": {
                 "tags": [
                     "alumnes"
                 ],
-                "summary": "Modificar ciclo Alumno",
-                "description": "Modificar ciclo Alumno",
-                "operationId": "updateAlumnesCicle",
+                "summary": "Validar ciclo alumne",
+                "description": "Modificar cicle alumne",
+                "operationId": "updateAlumnesCiclo",
                 "parameters": [
                     {
-                        "name": "idAlumno",
+                        "name": "alumno",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "name": "idCiclo",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -223,7 +223,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Alumno correctament modificat",
+                        "description": "Alumno amb cicle",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -232,15 +232,15 @@
                             }
                         }
                     },
-                    "422": {
-                        "description": "Wrong credentials response",
+                    "405": {
+                        "description": "Forbidden",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "error": {
+                                        "message": {
                                             "type": "string",
-                                            "example": "Credencials no vàlides"
+                                            "example": "Forbidden."
                                         }
                                     },
                                     "type": "object"
@@ -947,11 +947,29 @@
                         "type": "integer",
                         "example": "220"
                     },
+                    "cDept": {
+                        "title": "Departament Castellà",
+                        "description": "Nom en castellà del departament",
+                        "type": "string",
+                        "example": "Informática"
+                    },
+                    "vDept": {
+                        "title": "Departament Valencià",
+                        "description": "Nom en valencià del departament",
+                        "type": "string",
+                        "example": "Informàtica"
+                    },
                     "vCiclo": {
                         "title": "vCiclo",
-                        "description": "Info del cicle",
+                        "description": "Informaciò del cicle",
                         "type": "string",
                         "example": "Diseeny d'aplicacion web"
+                    },
+                    "cCiclo": {
+                        "title": "cCiclo",
+                        "description": "Información del ciclo",
+                        "type": "string",
+                        "example": "Diseño de aplicaciones web"
                     }
                 },
                 "type": "object",

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\AlumnoCicloUpdateRequest;
 use App\Models\Ciclo;
-use App\Http\Requests\AlumnoStoreRequest;
+use Illuminate\Http\Request;
 use App\Http\Resources\AlumnoResource;
 use App\Models\Alumno;
 use App\Notifications\ValidateStudent;
@@ -93,6 +93,43 @@ use Illuminate\Auth\AuthenticationException;
  */
 
 /**
+ * @OA\Put(
+ * path="/api/alumnos/{alumno}/ciclo/{id}",
+ * summary="Validar ciclo alumne",
+ * description="Modificar cicle alumne",
+ * operationId="updateAlumnesCiclo",
+ * tags={"alumnes"},
+ * security={ {"apiAuth": {} }},
+ * @OA\Parameter(
+ *          name="alumno",
+ *          in="path",
+ *          required=true,
+ * ),
+ * @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ * ),
+ * @OA\RequestBody(
+ *    required=true,
+ *    @OA\JsonContent(ref="#/components/schemas/AlumnoCicloUpdateRequest")
+ * ),
+ * @OA\Response(
+ *    response=200,
+ *    description="Alumno amb cicle",
+ *    @OA\JsonContent(ref="#/components/schemas/AlumnoResource")
+ * ),
+ * @OA\Response(
+ *    response=405,
+ *    description="Forbidden",
+ *    @OA\JsonContent(
+ *       @OA\Property(property="message", type="string", example="Forbidden.")
+ *        )
+ *     )
+ * )
+ */
+
+/**
  * @OA\Get(
  * path="/api/alumnos/{id}",
  * summary="Dades d'un alumne",
@@ -119,60 +156,24 @@ use Illuminate\Auth\AuthenticationException;
  * )
  */
 
-/**
- * @OA\Put(
- * path="/api/alumnos/{idAlumno}/ciclo/{idCiclo}",
- * summary="Modificar ciclo Alumno",
- * description="Modificar ciclo Alumno",
- * operationId="updateAlumnesCicle",
- * tags={"alumnes"},
- * security={ {"apiAuth": {} }},
- * @OA\Parameter(
- *          name="idAlumno",
- *          in="path",
- *          required=true,
- * ),
- * @OA\Parameter(
- *          name="idCiclo",
- *          in="path",
- *          required=true,
- * ),
- * @OA\RequestBody(
- *    required=true,
- *    @OA\JsonContent(ref="#/components/schemas/AlumnoCicloUpdateRequest")
- * ),
- * @OA\Response(
- *    response=200,
- *    description="Alumno correctament modificat",
- *    @OA\JsonContent(ref="#/components/schemas/AlumnoResource")
- * ),
- * @OA\Response(
- *    response=422,
- *    description="Wrong credentials response",
- *    @OA\JsonContent(
- *       @OA\Property(property="error", type="string", example="Credencials no vàlides")
- *        )
- *     )
- * )
- */
 
 class AlumnoController extends ApiBaseController
 {
-    use traitRelation;
 
     public function model(){
         return 'Alumno';
     }
-   protected function relationShip()
-    {
-        return 'ciclos';
-    }
+
 
     protected function validaCiclo(AlumnoCicloUpdateRequest $request,$idAlumno,$idCiclo)
     {
-        $alumno = Alumno::find($idAlumno);
-        $alumno->Ciclos()->updateExistingPivot($idCiclo, ['any' => $request->any,'validado'=>$request->validado]);
-        return parent::manageResponse($alumno);
+        if (AuthUser()->isResponsable()) {
+            $alumno = Alumno::find($idAlumno);
+            $alumno->Ciclos()->updateExistingPivot($idCiclo, ['any' => $request->any, 'validado' => $request->validado]);
+            return  new AlumnoResource($alumno);
+        } else {
+            throw new UnauthorizedException('Forbidden.');
+        }
     }
 
     protected function adviseSomeOne($registro){
@@ -208,23 +209,20 @@ class AlumnoController extends ApiBaseController
         }
     }
 
-    public function update(AlumnoStoreRequest $request, $id)
+    public function update(Request $request, $id)
     {
         if (AuthUser()->id == $id){
             $alumno = Alumno::findOrFail($id);
             $alumno->update($request->except(['id']));
             $alumno->Ciclos()->sync($request->ciclos);
-            return AlumnoResource::collection(Alumno::where('id',AuthUser()->id)->get());
+            return new AlumnoResource($alumno);
         }
         else {
             throw new UnauthorizedException('Forbidden.');
         }
     }
 
-    public function store(AlumnoStoreRequest $request)
-    {
-        return $this->manageResponse(Alumno::create($request->all()));
-    }
+
 
 
 

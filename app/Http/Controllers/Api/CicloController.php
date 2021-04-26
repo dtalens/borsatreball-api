@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 
 use App\Http\Requests\CicloStoreRequest;
+use App\Http\Resources\CicloResource;
 use App\Models\Ciclo;
 
 /**
@@ -123,12 +124,17 @@ class CicloController extends ApiBaseController
 
     public function update(CicloStoreRequest $request, $id)
     {
-        $registro = Ciclo::findOrFail($id);
-        return $this->manageResponse($registro->update($request->all()));
+        $ciclo = Ciclo::findOrFail($id);
+        $ciclo->fill($request->except('id'));
+        $ciclo->save();
+        return new CicloResource($ciclo);
     }
     public function store(CicloStoreRequest $request)
     {
-        return $this->manageResponse(Ciclo::create($request));
+        $ciclo = Ciclo::create($request->toArray());
+        return new CicloResource($ciclo);
     }
+
+
 
 }

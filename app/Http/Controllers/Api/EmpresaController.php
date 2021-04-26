@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Entities\Empresa;
+use Illuminate\Http\Request;
+use App\Models\Empresa;
 use App\Http\Resources\EmpresaResource;
+use Illuminate\Validation\UnauthorizedException;
 
 /**
  * @OA\Get(
@@ -133,18 +135,30 @@ class EmpresaController extends ApiBaseController
 
     public function index()
     {
-        if (AuthUser()->isEmpresa())
+        if (AuthUser()->isEmpresa()){
             return EmpresaResource::collection(Empresa::where('id',AuthUser()->id)->get());
-        if (AuthUser()->isAlumno())
-            return [];
-        if (AuthUser()->isAdmin() || AuthUser()->isResponsable()) return parent::index();
-        return response('No autenticado',405);
+        } else {
+            return parent::index();
+        }
     }
 
     public function show($id)
     {
-        if (AuthUser()->isAlumno()) return [];
-        if (AuthUser()->isEmpresa()) $id = AuthUser()->id;
-        if (AuthUser()) return parent::store($id);
+        if (AuthUser()->isEmpresa() && AuthUser()->id != $id) {
+            throw new UnauthorizedException('Forbidden.');
+        } else {
+            return parent::show($id);
+        }
+    }
+
+    public function update(Request $request,$id){
+        if (AuthUser()->isEmpresa() && AuthUser()->id != $id) {
+            throw new UnauthorizedException('Forbidden.');
+        }
+        else {
+            $empresa = Empresa::findOrFail($id);
+            $empresa->update($request->except(['id']));
+            return new EmpresaResource($empresa);
+        }
     }
 }

@@ -33,12 +33,34 @@ abstract class FeatureTestCase extends TestCase
             []);
         return $user;
     }
-    protected function getDataFromJson($method,$route){
-        return $this->json($method, $route)
+    protected function getDataFromJson($method,$route,$data=[]){
+        return $this->json($method, $route,$data,['Accept' => 'application/json'])
             ->assertStatus(200)
             ->assertJsonStructure(["data" => []])
             ->decodeResponseJson()
             ->json()['data'];
+    }
+    protected function expectedForbidden($method,$route,$data=[]){
+        $this->json($method, $route,$data,['Accept' => 'application/json'])
+            ->assertStatus(405)
+            ->assertJson([
+                "message" => "Forbidden.",
+            ]);
+
+    }
+    protected function expectedUnauthenticated($method,$route,$data=[]){
+        $this->json($method, $route,$data,['Accept' => 'application/json'])
+            ->assertStatus(421)
+            ->assertJson([
+                "message" => "Unauthenticated.",
+            ]);
+    }
+    protected function expectedNotFound($method,$route,$modelo,$data=[]){
+        $this->json($method, $route,$data,['Accept' => 'application/json'])
+            ->assertStatus(401)
+            ->assertJson([
+                "message" => "$modelo not found.",
+            ]);
     }
 
 }
