@@ -7,6 +7,8 @@ use App\Models\Ciclo;
 use Illuminate\Http\Request;
 use App\Http\Resources\AlumnoResource;
 use App\Models\Alumno;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use App\Notifications\ValidateStudent;
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Auth\AuthenticationException;
@@ -157,6 +159,33 @@ use Illuminate\Auth\AuthenticationException;
  */
 
 
+/**
+ * @OA\Delete (
+ * path="/api/alumnos/{id}",
+ * summary="Esborra Alumne",
+ * description="Torna les dades de l'alumne esborrat",
+ * operationId="deleteAlumnes",
+ * tags={"alumnes"},
+ * security={ {"apiAuth": {} }},
+ * @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ * ),
+ * @OA\Response(
+ *    response=200,
+ *    description="Alumne esborrat",
+ *    @OA\JsonContent(
+ *        @OA\Property(
+ *          property="data",
+ *          type="array",
+ *          @OA\Items(ref="#/components/schemas/AlumnoResource")
+ *        )
+ *    )
+ *   )
+ * )
+ */
+
 class AlumnoController extends ApiBaseController
 {
 
@@ -167,8 +196,9 @@ class AlumnoController extends ApiBaseController
 
     protected function validaCiclo(AlumnoCicloUpdateRequest $request,$idAlumno,$idCiclo)
     {
-        if (AuthUser()->isResponsable()) {
+        if (AuthUser()->isResponsable()||AuthUser()->isAdmin()) {
             $alumno = Alumno::find($idAlumno);
+            $any = $request->any??0;
             $alumno->Ciclos()->updateExistingPivot($idCiclo, ['any' => $request->any, 'validado' => $request->validado]);
             return  new AlumnoResource($alumno);
         } else {
@@ -222,9 +252,32 @@ class AlumnoController extends ApiBaseController
         }
     }
 
+    public function destroy($id)
+    {
+        if ($this->authAlumno($id)){
+            Alumno::findOrFail($id);
+            $result = DB::transaction(function () use ($id) {
+                if (Alumno::destroy($id)) {
+                    return User::destroy($id);
+                }
+                return false;
+            });
+            return $result?response(['data'=>['id'=>$id]],200):response(['message'=>'Error'],401);
+        } else {
+            throw new UnauthorizedException('Forbidden.');
+        }
 
+    }
 
-
+    private function authAlumno($id){
+        if (AuthUser()->id == $id) {
+            return true;
+        }
+        if (AuthUser()->isAdmin() || AuthUser()->isResponsable()) {
+            return true;
+        }
+        return false;
+    }
 
 }
 

@@ -67,19 +67,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *      property = "ciclos",
  *      type="array",
  *      @OA\Items(ref="#/components/schemas/AlumnoCicloResource")
- *      ),
- *     @OA\Property(
- *      property = "created_at",
- *      title="created_at",
- *      description="Hora de creació registre",
- *      example="2022-03-17 19:37:34",
- *      type="time"),
- *     @OA\Property(
- *      property = "updated_at",
- *      title="updated_at",
- *      description="Hora de modificació registre",
- *      example="2022-03-17 19:37:34",
- *      type="time")
+ *      )
  * )
  */
 

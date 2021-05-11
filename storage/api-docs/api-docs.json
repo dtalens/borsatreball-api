@@ -189,6 +189,46 @@
                         "apiAuth": []
                     }
                 ]
+            },
+            "delete": {
+                "tags": [
+                    "alumnes"
+                ],
+                "summary": "Esborra Alumne",
+                "description": "Torna les dades de l'alumne esborrat",
+                "operationId": "deleteAlumnes",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Alumne esborrat",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/AlumnoResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
             }
         },
         "/api/alumnos/{alumno}/ciclo/{id}": {
@@ -1254,18 +1294,6 @@
                         "items": {
                             "$ref": "#/components/schemas/AlumnoCicloResource"
                         }
-                    },
-                    "created_at": {
-                        "title": "created_at",
-                        "description": "Hora de creació registre",
-                        "type": "time",
-                        "example": "2022-03-17 19:37:34"
-                    },
-                    "updated_at": {
-                        "title": "updated_at",
-                        "description": "Hora de modificació registre",
-                        "type": "time",
-                        "example": "2022-03-17 19:37:34"
                     }
                 },
                 "type": "object",

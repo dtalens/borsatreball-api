@@ -52,11 +52,16 @@ Route::group(['middleware' => ['auth:api','role:administrador,responsable,empres
         ['except' => ['destroy','store']]);
 });
 
+Route::group(['middleware' => ['auth:api','role:administrador,responsable,alumno']], function() {
+    Route::delete('alumnos/{alumno}','Api\AlumnoController@destroy');
+});
+
 Route::group(['middleware' => ['auth:api','role:administrador']], function() {
     Route::apiResources(
         [   'ciclos'    =>'Api\CicloController'
         ],
         ['except' => ['destroy','index','show']]);
+
 });
 
 Route::group([
