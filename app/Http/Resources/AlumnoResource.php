@@ -67,7 +67,19 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *      property = "ciclos",
  *      type="array",
  *      @OA\Items(ref="#/components/schemas/AlumnoCicloResource")
- *      )
+ *      ),
+ *     @OA\Property(
+ *      property = "created_at",
+ *      title="created_at",
+ *      description="Hora de creació registre",
+ *      example="2022-03-17 19:37:34",
+ *      type="time"),
+ *     @OA\Property(
+ *      property = "updated_at",
+ *      title="updated_at",
+ *      description="Hora de modificació registre",
+ *      example="2022-03-17 19:37:34",
+ *      type="time")
  * )
  */
 
@@ -98,6 +110,8 @@ class AlumnoResource extends JsonResource
             'telefono' => $this->telefono,
             'email' => $this->User->email,
             'ciclos' => $this->ciclos?AlumnoCicloResource::collection($this->ciclos):[],
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at
         ];
     }
 
