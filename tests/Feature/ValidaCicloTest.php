@@ -12,10 +12,11 @@ class ValidaCicloTest extends FeatureTestCase
     const PETITION = 'api/alumnos/3/ciclo/4';
     const CICLODATA = [
         "any" => '2020',
-        "validado" => 1,
+        "validado" => true,
     ];
     const DESCICLODATA = [
-        "validado" => 0,
+        "any" => '',
+        "validado" => false,
     ];
 
     public function testvalidationYearError()
@@ -23,7 +24,7 @@ class ValidaCicloTest extends FeatureTestCase
         $year = date('Y');
         $errorData = [
             "any" => $year+1,
-            "validado" => 1
+            "validado" => true
         ];
         $this->seed();
         $this->actingAsRol(self::RESPONSABLE_ROL);
@@ -69,7 +70,7 @@ class ValidaCicloTest extends FeatureTestCase
     {
         $cicloData = [
             "any" => '2020',
-            "validado" => 1,
+            "validado" => true,
         ];
 
         $this->seed();
