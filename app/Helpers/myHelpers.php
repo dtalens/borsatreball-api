@@ -54,5 +54,16 @@ function AuthUser()
     return auth()->user();
 }
 
+function selfAuth($id){
+    if (AuthUser()->id == $id) {
+        return true;
+    }
+    if (AuthUser()->isAdmin() || AuthUser()->isResponsable()) {
+        return true;
+    }
+    return false;
+}
+
+
 
 

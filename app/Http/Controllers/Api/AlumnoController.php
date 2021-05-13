@@ -254,7 +254,7 @@ class AlumnoController extends ApiBaseController
 
     public function destroy($id)
     {
-        if ($this->authAlumno($id)){
+        if (selfAuth($id)){
             Alumno::findOrFail($id);
             $result = DB::transaction(function () use ($id) {
                 if (Alumno::destroy($id)) {
@@ -269,15 +269,7 @@ class AlumnoController extends ApiBaseController
 
     }
 
-    private function authAlumno($id){
-        if (AuthUser()->id == $id) {
-            return true;
-        }
-        if (AuthUser()->isAdmin() || AuthUser()->isResponsable()) {
-            return true;
-        }
-        return false;
-    }
+
 
 }
 

@@ -49,7 +49,7 @@ Route::group(['middleware' => ['auth:api','role:administrador,responsable,empres
     Route::apiResources(
         [   'empresas'  => 'Api\EmpresaController',
         ],
-        ['except' => ['destroy','store']]);
+        ['except' => ['store']]);
 });
 
 Route::group(['middleware' => ['auth:api','role:administrador,responsable,alumno']], function() {

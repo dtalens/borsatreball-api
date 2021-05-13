@@ -125,12 +125,17 @@ class EmpresaController extends ApiBaseController
 
     public function destroy($id)
     {
-        $thereIsAndOffer = Empresa::find($id)->Ofertas()->where('archivada',0)->count();
-        if ($thereIsAndOffer) return response("L'empresa té ofertes. Esborra-les primer",400);
+        if (selfAuth($id)){
+            $empresa = Empresa::findOrFail($id);
+            $thereIsAndOffer = $empresa->Ofertas()->where('archivada',0)->count();
+            if ($thereIsAndOffer) return response(['message'=>"L'empresa té ofertes. Esborra-les primer"],401);
 
-        if (Empresa::destroy($id)) return response(1,200);
+            if (Empresa::destroy($id)) return response(['data'=>['id'=>$id]],200);
 
-        return response("No he pogut Esborrar $id",400);
+            return response("No he pogut Esborrar $id",400);
+        } else {
+            throw new UnauthorizedException('Forbidden.');
+        }
     }
 
     public function index()
@@ -161,4 +166,6 @@ class EmpresaController extends ApiBaseController
             return new EmpresaResource($empresa);
         }
     }
+
+
 }

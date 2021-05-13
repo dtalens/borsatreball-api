@@ -9,7 +9,7 @@ class AlumnosShowTest extends FeatureTestCase
 {
     const PETITION = 'api/alumnos/3';
     const WRONG_PETITION = 'api/alumnos/4';
-    const FIELDS = ['id','nombre','apellidos','domicilio','info','bolsa','cv_enlace','telefono','email','ciclos'];
+    const FIELDS = ['id','nombre','apellidos','domicilio','info','bolsa','cv_enlace','telefono','email','ciclos','created_at','updated_at'];
 
     public function testUnauthenticated()
     {
