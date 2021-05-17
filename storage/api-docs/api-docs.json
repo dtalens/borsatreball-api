@@ -789,6 +789,48 @@
                 ]
             }
         },
+        "/api/ofertas/{id}": {
+            "get": {
+                "tags": [
+                    "ofertas"
+                ],
+                "summary": "Dades d'una oferta",
+                "description": "Torna les dades d'una oferta amb dades agregades",
+                "operationId": "showOfertas",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Alumne segons el permis",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/OfertaResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
         "/api/users/{email}/available": {
             "get": {
                 "tags": [
@@ -1714,13 +1756,6 @@
                         "description": "Oferta Validada",
                         "type": "boolean",
                         "example": "1"
-                    },
-                    "any": {
-                        "schema": "OfertaResource",
-                        "title": "any",
-                        "description": "Any finalització cicle",
-                        "type": "string",
-                        "example": "2015"
                     },
                     "estudiando": {
                         "schema": "OfertaResource",

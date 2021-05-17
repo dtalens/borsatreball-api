@@ -21,7 +21,7 @@ class OfertasIndexTest extends FeatureTestCase
         $this->seed();
         $this->actingAsRol(self::ADMIN_ROL);
         $items = $this->getDataFromJson(self::METHOD,self::PETITION);
-        $this->assertEquals(count($items),count(Oferta::all()));
+        $this->assertEquals(count($items),count(Oferta::where('archivada',0)->get()));
     }
 
     public function testIndexResponsableReturnOffersCicle()
@@ -43,7 +43,7 @@ class OfertasIndexTest extends FeatureTestCase
         $this->assertEquals(1,count($items));
     }
 
-    public function testIndexEstudianteReturnOffersCicle()
+    public function testIndexAlumnoEstudiandoReturnOffersCicle()
     {
         $this->seed();
         $user = $this->actingAsUser(4);
@@ -51,30 +51,19 @@ class OfertasIndexTest extends FeatureTestCase
         $this->assertEquals(2,count($items));
     }
 
-/*
 
-    public function testIndexResponsableReturnAlumnesCicle()
+    public function testIndexEnterpriseReturnSelfOffers()
     {
         $this->seed();
-        $user = $this->actingAsRol(self::RESPONSABLE_ROL);
+        $user = $this->actingAsUser(self::ID_EMPRESA_WITH_OFFERS);
         $items = $this->getDataFromJson('GET',self::PETITION);
-        $this->assertEquals(count($items),1);
-        $alumno = $items[0];
-        $this->assertEquals(4,$alumno['id']);
-    }
-
-    public function testIndexEnterpriseReturnInterested()
-    {
-        $this->seed();
-        $user = $this->actingAsRol(self::EMPRESA_ROL);
-        $items = $this->getDataFromJson('GET',self::PETITION);
-        $this->assertEquals(count($items),1);
+        $this->assertEquals(count($items),2);
         $this->actingAsUser(self::ID_EMPRESA_WITHOUT_OFFERS);
         $items = $this->getDataFromJson('GET',self::PETITION);
         $this->assertEquals(count($items),0);
     }
 
-*/
+
 
 
 }

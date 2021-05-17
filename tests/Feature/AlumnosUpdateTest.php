@@ -90,7 +90,7 @@ class AlumnosUpdateTest extends FeatureTestCase
                     "cv_enlace" => null,
                     "telefono" => "655556777",
                     "email" => $user->email,
-                    "ciclos" => [['id_alumno'=>3,'id_ciclo'=>2,'any'=>'2016','validado'=>1],['id_alumno'=>3,'id_ciclo'=>3,'any'=>'2018','validado'=>1],['id_alumno'=>3,'id_ciclo'=>4,'any'=>null,'validado'=>0]]
+                    "ciclos" => [['id_alumno'=>3,'id_ciclo'=>2,'any'=>'2016','validado'=>1],['id_alumno'=>3,'id_ciclo'=>3,'any'=>'2018','validado'=>1],['id_alumno'=>3,'id_ciclo'=>12,'any'=>null,'validado'=>1]]
                 ]]);
     }
 

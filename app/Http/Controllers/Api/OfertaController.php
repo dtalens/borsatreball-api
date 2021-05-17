@@ -33,6 +33,33 @@ use Illuminate\Support\Facades\DB;
  * )
  */
 
+/**
+ * @OA\Get(
+ * path="/api/ofertas/{id}",
+ * summary="Dades d'una oferta",
+ * description="Torna les dades d'una oferta amb dades agregades",
+ * operationId="showOfertas",
+ * tags={"ofertas"},
+ * security={ {"apiAuth": {} }},
+ * @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ * ),
+ * @OA\Response(
+ *    response=200,
+ *    description="Alumne segons el permis",
+ *    @OA\JsonContent(
+ *        @OA\Property(
+ *          property="data",
+ *          type="array",
+ *          @OA\Items(ref="#/components/schemas/OfertaResource")
+ *        )
+ *    )
+ *   )
+ * )
+ */
+
 class OfertaController extends ApiBaseController
 {
     use traitRelation;
@@ -56,7 +83,7 @@ class OfertaController extends ApiBaseController
     }
 
     private function filterIndex($archivada){
-        if ($archivada && (AuthUser()->isEmpresa() || AuthUser()->isAlumno())) return [];
+        if ($archivada && (AuthUser()->isEmpresa() || AuthUser()->isAlumno())) return response(['data'=>[]],200);
         if (AuthUser()->isEmpresa()) return OfertaResource::collection(Oferta::BelongsToEnterprise(AuthUser()->id)->where('archivada',$archivada)->orderBy('updated_at','DESC')->get());
         if (AuthUser()->isAlumno()){
             $ofertasTrabajo = Oferta::BelongsToCicles(Alumno::find(AuthUser()->id)->ciclosAcabados)->where('validada',true)->where('activa',true)->where('estudiando',false)->where('archivada',false);

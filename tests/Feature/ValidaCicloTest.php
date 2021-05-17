@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class ValidaCicloTest extends FeatureTestCase
 {
-    const PETITION = 'api/alumnos/3/ciclo/4';
+    const PETITION = 'api/alumnos/3/ciclo/12';
     const CICLODATA = [
         "any" => '2020',
         "validado" => true,
@@ -42,7 +42,7 @@ class ValidaCicloTest extends FeatureTestCase
     {
         $expectedResult =[
             "id_alumno" => 3,
-            "id_ciclo" => 4,
+            "id_ciclo" => 12,
             "any" => '2020',
             "validado" => 1,
         ];
@@ -56,7 +56,7 @@ class ValidaCicloTest extends FeatureTestCase
     {
         $expectedResult =[
             "id_alumno" => 3,
-            "id_ciclo" => 4,
+            "id_ciclo" => 12,
             "validado" => 0,
             "any" => 0
         ];

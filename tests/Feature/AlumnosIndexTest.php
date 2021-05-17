@@ -38,9 +38,9 @@ class AlumnosIndexTest extends FeatureTestCase
         $this->seed();
         $user = $this->actingAsRol(self::RESPONSABLE_ROL);
         $items = $this->getDataFromJson(self::METHOD,self::PETITION);
-        $this->assertEquals(count($items),1);
+        $this->assertEquals(2,count($items));
         $alumno = $items[0];
-        $this->assertEquals(4,$alumno['id']);
+        $this->assertEquals(3,$alumno['id']);
     }
 
     public function testIndexEnterpriseReturnInterested()
