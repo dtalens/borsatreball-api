@@ -10,18 +10,19 @@ class MenuIndexTest extends FeatureTestCase
 {
     const PETITION = 'api/menu';
     const FIELDS = ['id','order','icon','text','path','rol','parent','model','active','comments','icon_alt'];
+    const METHOD = 'GET';
 
     public function testUnauthenticated()
     {
         $this->seed();
-        $this->expectedUnauthenticated('GET', self::PETITION);
+        $this->expectedUnauthenticated(self::METHOD, self::PETITION);
     }
 
     public function testSuccessfulAlumno()
     {
         $this->seed();
         $this->actingAsRol(self::ALUMNO_ROL);
-        $itemsMenu = $this->getDataFromJson('GET',self::PETITION);
+        $itemsMenu = $this->getDataFromJson(self::METHOD,self::PETITION);
         $this->checkItemsMatchRol($itemsMenu,self::ALUMNO_ROL);
     }
 
@@ -29,7 +30,7 @@ class MenuIndexTest extends FeatureTestCase
     {
         $this->seed();
         $this->actingAsRol(self::EMPRESA_ROL);
-        $itemsMenu = $this->getDataFromJson('GET',self::PETITION);
+        $itemsMenu = $this->getDataFromJson(self::METHOD,self::PETITION);
         $this->checkItemsMatchRol($itemsMenu,self::EMPRESA_ROL);
     }
 
@@ -37,7 +38,7 @@ class MenuIndexTest extends FeatureTestCase
     {
         $this->seed();
         $this->actingAsRol(self::ADMIN_ROL);
-        $itemsMenu = $this->getDataFromJson('GET',self::PETITION);
+        $itemsMenu = $this->getDataFromJson(self::METHOD,self::PETITION);
         $this->checkItemsMatchRol($itemsMenu,self::ADMIN_ROL);
     }
 
@@ -45,7 +46,7 @@ class MenuIndexTest extends FeatureTestCase
     {
         $this->seed();
         $this->actingAsRol(self::ADMIN_ROL);
-        $itemsMenu = $this->getDataFromJson('GET',self::PETITION)[0];
+        $itemsMenu = $this->getDataFromJson(self::METHOD,self::PETITION)[0];
         $this->assertEquals(self::FIELDS,array_keys($itemsMenu));
     }
 

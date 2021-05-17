@@ -9,7 +9,7 @@ use Tests\FeatureTestCase;
 
 class LoginTest extends FeatureTestCase
 {
-
+    const METHOD = 'POST';
 
     public function testSuccesfulLogin(){
         $loginData = [
@@ -18,7 +18,7 @@ class LoginTest extends FeatureTestCase
         ];
 
         $this->seed();
-        $this->json('POST','api/auth/login',$loginData,['Accept' => 'application/json'])
+        $this->json(self::METHOD,'api/auth/login',$loginData,['Accept' => 'application/json'])
             ->assertStatus(200)
             ->assertJsonStructure([
                 "data" => [
@@ -38,7 +38,7 @@ class LoginTest extends FeatureTestCase
         ];
 
         $this->seed();
-        $this->json('POST','api/auth/login',$loginData,['Accept' => 'application/json'])
+        $this->json(self::METHOD,'api/auth/login',$loginData,['Accept' => 'application/json'])
             ->assertStatus(421)
             ->assertJson([
                 "message" => "Login or password are wrong.",

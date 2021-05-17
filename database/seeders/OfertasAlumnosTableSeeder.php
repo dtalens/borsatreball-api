@@ -14,7 +14,7 @@ class OfertasAlumnosTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('ofertas_alumnos')->insert(['id'=>1,'id_oferta'=>1,'id_alumno'=>4,'interesado'=>1]);
-        DB::table('ofertas_alumnos')->insert(['id'=>2,'id_oferta'=>1,'id_alumno'=>3,'interesado'=>0]);
+        DB::table('ofertas_alumnos')->insert(['id'=>1,'id_oferta'=>1,'id_alumno'=>3]);
+        DB::table('ofertas_alumnos')->insert(['id'=>2,'id_oferta'=>1,'id_alumno'=>4]);
      }
 }

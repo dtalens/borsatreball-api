@@ -232,7 +232,7 @@ class AlumnoController extends ApiBaseController
 
     public function show($id)
     {
-        if (AuthUser()->id == $id){
+        if (selfAuth($id)){
             return parent::show($id);
         } else {
             throw new UnauthorizedException('Forbidden.');
@@ -241,10 +241,12 @@ class AlumnoController extends ApiBaseController
 
     public function update(Request $request, $id)
     {
-        if (AuthUser()->id == $id){
+        if (selfAuth($id)){
             $alumno = Alumno::findOrFail($id);
             $alumno->update($request->except(['id']));
-            $alumno->Ciclos()->sync($request->ciclos);
+            if ($request->ciclos) {
+                $alumno->Ciclos()->sync($request->ciclos);
+            }
             return new AlumnoResource($alumno);
         }
         else {

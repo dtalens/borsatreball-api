@@ -9,7 +9,6 @@ class CiclosShowTest extends FeatureTestCase
 {
     const PETITION = 'api/ciclos/2';
     const WRONG_PETITION = 'api/ciclos/1';
-    const FIELDS = ['id','codigo','ciclo','Dept','cDept','vDept','responsable','vCiclo','cCiclo'];
 
 
     public function testUnauthenticated()
@@ -31,7 +30,7 @@ class CiclosShowTest extends FeatureTestCase
         $this->seed();
         $this->actingAsRol(self::ALUMNO_ROL);
         $item = $this->getDataFromJson('GET',self::PETITION);
-        $this->assertEquals(self::FIELDS,array_keys($item));
+        $this->assertEquals(self::CICLOS_FIELDS,array_keys($item));
     }
 
     public function testEmptyAnswer()

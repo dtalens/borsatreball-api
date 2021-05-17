@@ -661,6 +661,46 @@
                         "apiAuth": []
                     }
                 ]
+            },
+            "delete": {
+                "tags": [
+                    "empreses"
+                ],
+                "summary": "Esborra Empresa",
+                "description": "Torna id de l'empresa esborrada",
+                "operationId": "deleteEmpreses",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Empresa esborrasa",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/AlumnoResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
             }
         },
         "/api/menu": {
@@ -699,6 +739,41 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ofertas": {
+            "get": {
+                "tags": [
+                    "ofertas"
+                ],
+                "summary": "Dades de les ofertes",
+                "description": "Torna les dades de les ofertes segons usuari",
+                "operationId": "indexAlumnes",
+                "responses": {
+                    "200": {
+                        "description": "Ofertes segons el permis",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/OfertaResource"
+                                            }
                                         }
                                     },
                                     "type": "object"
@@ -1294,6 +1369,18 @@
                         "items": {
                             "$ref": "#/components/schemas/AlumnoCicloResource"
                         }
+                    },
+                    "created_at": {
+                        "title": "created_at",
+                        "description": "Hora de creació registre",
+                        "type": "time",
+                        "example": "2022-03-17 19:37:34"
+                    },
+                    "updated_at": {
+                        "title": "updated_at",
+                        "description": "Hora de modificació registre",
+                        "type": "time",
+                        "example": "2022-03-17 19:37:34"
                     }
                 },
                 "type": "object",
@@ -1549,6 +1636,156 @@
                 "type": "object",
                 "xml": {
                     "name": "Menu"
+                }
+            },
+            "OfertaResource": {
+                "title": "Oferta",
+                "description": "Ofertas",
+                "properties": {
+                    "id": {
+                        "title": "id",
+                        "description": "Identificador de oferta",
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "id_empresa": {
+                        "title": "id_empresa",
+                        "description": "ID de l'empresa que fa l'oferta",
+                        "type": "integer",
+                        "example": "5"
+                    },
+                    "descripcion": {
+                        "title": "descripcion",
+                        "description": "Descripció de l'oferta",
+                        "type": "string",
+                        "example": "Se busca persona capaz de aguantar horas de sol"
+                    },
+                    "puesto": {
+                        "title": "puesto",
+                        "description": "Lloc de treball",
+                        "type": "string",
+                        "example": "Peon caminero"
+                    },
+                    "tipo_contrato": {
+                        "schema": "OfertaResource",
+                        "title": "tipo_contrato",
+                        "description": "Tipo de contrato ofertado",
+                        "type": "string",
+                        "example": "Temporal"
+                    },
+                    "activa": {
+                        "schema": "OfertaResource",
+                        "title": "activa",
+                        "description": "Oferta Activa",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "contacto": {
+                        "schema": "OfertaResource",
+                        "title": "contacto",
+                        "description": "Persona de contacto",
+                        "type": "string",
+                        "example": "Pepe Botera"
+                    },
+                    "telefono": {
+                        "schema": "OfertaResource",
+                        "title": "telefono",
+                        "description": "Telefono de contacto",
+                        "type": "string",
+                        "example": "546654456"
+                    },
+                    "email": {
+                        "schema": "OfertaResource",
+                        "title": "email",
+                        "description": "Email de contacto",
+                        "type": "string",
+                        "example": "PepeBotera@gmail.com"
+                    },
+                    "mostrar_contacto": {
+                        "schema": "OfertaResource",
+                        "title": "mostrar_contacto",
+                        "description": "Muestro o no el contacto",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "validada": {
+                        "schema": "OfertaResource",
+                        "title": "validada",
+                        "description": "Oferta Validada",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "any": {
+                        "schema": "OfertaResource",
+                        "title": "any",
+                        "description": "Any finalització cicle",
+                        "type": "string",
+                        "example": "2015"
+                    },
+                    "estudiando": {
+                        "schema": "OfertaResource",
+                        "title": "estudiando",
+                        "description": "Acepta estudiantes",
+                        "type": "boolean",
+                        "example": "0"
+                    },
+                    "interesado": {
+                        "schema": "OfertaResource",
+                        "title": "interesado",
+                        "description": "Si es alumno, si esta interesado en la oferta",
+                        "type": "boolean",
+                        "example": "0"
+                    },
+                    "alumnos": {
+                        "schema": "OfertaResource",
+                        "title": "alumnos",
+                        "description": "Si no es alumno, datos alumnos interesado",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AlumnoResource"
+                        }
+                    },
+                    "ciclos": {
+                        "schema": "OfertaResource",
+                        "title": "ciclos requeridos",
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "title": "id",
+                                    "description": "Identificador de ciclo",
+                                    "type": "integer",
+                                    "example": "2"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "empresa": {
+                        "schema": "OfertaResource",
+                        "title": "empresa",
+                        "description": "Empresa Oferta",
+                        "type": "string",
+                        "example": "Pepe Botera y Otilio,S.A"
+                    },
+                    "created_at": {
+                        "schema": "OfertaResource",
+                        "title": "created_at",
+                        "description": "Hora de creació registre",
+                        "type": "time",
+                        "example": "2022-03-17 19:37:34"
+                    },
+                    "updated_at": {
+                        "schema": "OfertaResource",
+                        "title": "updated_at",
+                        "description": "Hora de modificació registre",
+                        "type": "time",
+                        "example": "2022-03-17 19:37:34"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "OfertasResource"
                 }
             }
         },

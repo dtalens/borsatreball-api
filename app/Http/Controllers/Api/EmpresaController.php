@@ -113,6 +113,35 @@ use Illuminate\Validation\UnauthorizedException;
  *    )
  *   )
  * )
+ *
+ *
+ */
+
+/**
+ * @OA\Delete (
+ * path="/api/empresas/{id}",
+ * summary="Esborra Empresa",
+ * description="Torna id de l'empresa esborrada",
+ * operationId="deleteEmpreses",
+ * tags={"empreses"},
+ * security={ {"apiAuth": {} }},
+ * @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ * ),
+ * @OA\Response(
+ *    response=200,
+ *    description="Empresa esborrasa",
+ *    @OA\JsonContent(
+ *        @OA\Property(
+ *          property="data",
+ *          type="array",
+ *          @OA\Items(ref="#/components/schemas/AlumnoResource")
+ *        )
+ *    )
+ *   )
+ * )
  */
 
 
@@ -129,10 +158,9 @@ class EmpresaController extends ApiBaseController
             $empresa = Empresa::findOrFail($id);
             $thereIsAndOffer = $empresa->Ofertas()->where('archivada',0)->count();
             if ($thereIsAndOffer) return response(['message'=>"L'empresa té ofertes. Esborra-les primer"],401);
-
             if (Empresa::destroy($id)) return response(['data'=>['id'=>$id]],200);
 
-            return response("No he pogut Esborrar $id",400);
+            return response(["message"=>"No he pogut Esborrar $id"],401);
         } else {
             throw new UnauthorizedException('Forbidden.');
         }
@@ -149,21 +177,21 @@ class EmpresaController extends ApiBaseController
 
     public function show($id)
     {
-        if (AuthUser()->isEmpresa() && AuthUser()->id != $id) {
-            throw new UnauthorizedException('Forbidden.');
-        } else {
+        if (selfAuth($id)) {
             return parent::show($id);
+        } else {
+            throw new UnauthorizedException('Forbidden.');
         }
     }
 
     public function update(Request $request,$id){
-        if (AuthUser()->isEmpresa() && AuthUser()->id != $id) {
-            throw new UnauthorizedException('Forbidden.');
-        }
-        else {
+        if (selfAuth($id)) {
             $empresa = Empresa::findOrFail($id);
             $empresa->update($request->except(['id']));
             return new EmpresaResource($empresa);
+        }
+        else {
+            throw new UnauthorizedException('Forbidden.');
         }
     }
 

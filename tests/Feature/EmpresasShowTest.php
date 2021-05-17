@@ -9,7 +9,6 @@ class EmpresasShowTest extends FeatureTestCase
 {
     const PETITION = 'api/empresas/5';
     const WRONG_PETITION = 'api/empresas/1';
-    const FIELDS = ['id','cif','nombre','domicilio','localidad','contacto','telefono','email','web','descripcion','created_at','updated_at'];
     const METHOD = 'GET';
 
     public function testUnauthenticated()
@@ -38,7 +37,7 @@ class EmpresasShowTest extends FeatureTestCase
         $this->seed();
         $this->actingAsRol(self::RESPONSABLE_ROL);
         $item = $this->getDataFromJson(self::METHOD,self::PETITION);
-        $this->assertEquals(self::FIELDS,array_keys($item));
+        $this->assertEquals(self::EMPRESA_FIELDS,array_keys($item));
     }
 
     public function testErrorAnotherForbidden()

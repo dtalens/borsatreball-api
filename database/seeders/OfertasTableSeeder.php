@@ -14,7 +14,9 @@ class OfertasTableSeeder extends Seeder
      */
     public function run()
     {
-        Oferta::create(['id'=>1,'id_empresa'=>'5','validada'=>1,'any'=>'2018','estudiando'=>1,
+        Oferta::create(['id'=>1,'id_empresa'=>'5','validada'=>1,'estudiando'=>1,
+            'activa'=>'1']);
+        Oferta::create(['id'=>2,'id_empresa'=>'5','validada'=>1,'estudiando'=>0,
             'activa'=>'1']);
 
     }

@@ -17,7 +17,6 @@ class CreateOfertasCiclosTable extends Migration {
 			$table->integer('id', true);
 			$table->integer('id_oferta')->unsigned()->index('id_oferta');
 			$table->integer('id_ciclo')->unsigned()->index('id_ciclo');
-			$table->integer('any_fin')->nullable();
 		});
 	}
 

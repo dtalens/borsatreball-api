@@ -2,18 +2,40 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Entities\Oferta;
+use App\Models\Oferta;
 use App\Http\Resources\OfertaResource;
 use Illuminate\Http\Request;
-use App\Entities\Alumno;
-use App\Entities\Ciclo;
-use App\Entities\User;
+use App\Models\Alumno;
+use App\Models\Ciclo;
+use App\Models\User;
 use App\Notifications\ValidateOffer;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @OA\Get(
+ * path="/api/ofertas",
+ * summary="Dades de les ofertes",
+ * description="Torna les dades de les ofertes segons usuari",
+ * operationId="indexAlumnes",
+ * tags={"ofertas"},
+ * security={ {"apiAuth": {} }},
+ * @OA\Response(
+ *    response=200,
+ *    description="Ofertes segons el permis",
+ *    @OA\JsonContent(
+ *        @OA\Property(
+ *          property="data",
+ *          type="array",
+ *          @OA\Items(ref="#/components/schemas/OfertaResource")
+ *        )
+ *    )
+ *   )
+ * )
+ */
+
 class OfertaController extends ApiBaseController
 {
-    //use traitRelation;
+    use traitRelation;
 
     public function model(){
         return 'Oferta';
@@ -37,16 +59,16 @@ class OfertaController extends ApiBaseController
         if ($archivada && (AuthUser()->isEmpresa() || AuthUser()->isAlumno())) return [];
         if (AuthUser()->isEmpresa()) return OfertaResource::collection(Oferta::BelongsToEnterprise(AuthUser()->id)->where('archivada',$archivada)->orderBy('updated_at','DESC')->get());
         if (AuthUser()->isAlumno()){
-            $ofertasFinalitzat = OfertaResource::collection(Oferta::BelongsToCicles(Alumno::find(AuthUser()->id)->ciclos->where('pivot.validado','=',true)->where('pivot.any', '!=', null))
-                ->where('validada',true)->where('activa',true)->where('estudiando',false)->where('archivada',false));
-            $ofertas = $ofertasFinalitzat->concat(OfertaResource::collection(Oferta::BelongsToCicles(Alumno::find(AuthUser()->id)->ciclos->where('pivot.validado','=',true))
-                ->where('validada',true)->where('activa',true)->where('estudiando',true)->where('archivada',false)));
-            return $ofertas->values();// values devuelve un array en vez de un objeto
+            $ofertasTrabajo = Oferta::BelongsToCicles(Alumno::find(AuthUser()->id)->ciclosAcabados)->where('validada',true)->where('activa',true)->where('estudiando',false)->where('archivada',false);
+            $ofertas = $ofertasTrabajo->concat(Oferta::BelongsToCicles(Alumno::find(AuthUser()->id)->ciclosValidos)->where('validada',true)->where('activa',true)->where('estudiando',true)->where('archivada',false));
+            return OfertaResource::collection($ofertas);
+
         }
         if (AuthUser()->isResponsable()) return OfertaResource::collection(Oferta::BelongsToCicles(Ciclo::where('responsable',AuthUser()->id)->get())->where('archivada',$archivada));
 
         return OfertaResource::collection(Oferta::where('archivada',$archivada)->get());
     }
+
 
     public function alumnoInterested(Request $request,$id)
     {

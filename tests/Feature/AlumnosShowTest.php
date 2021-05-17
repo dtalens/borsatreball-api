@@ -9,19 +9,19 @@ class AlumnosShowTest extends FeatureTestCase
 {
     const PETITION = 'api/alumnos/3';
     const WRONG_PETITION = 'api/alumnos/4';
-    const FIELDS = ['id','nombre','apellidos','domicilio','info','bolsa','cv_enlace','telefono','email','ciclos','created_at','updated_at'];
+    const METHOD = 'GET';
 
     public function testUnauthenticated()
     {
         $this->seed();
-        $this->expectedUnauthenticated('GET', self::PETITION);
+        $this->expectedUnauthenticated(self::METHOD, self::PETITION);
     }
 
     public function testSuccesfulSelf()
     {
         $this->seed();
         $this->actingAsRol(self::ALUMNO_ROL);
-        $this->json('GET', self::PETITION)
+        $this->json(self::METHOD, self::PETITION)
             ->assertStatus(200);
     }
 
@@ -29,15 +29,15 @@ class AlumnosShowTest extends FeatureTestCase
     {
         $this->seed();
         $this->actingAsRol(self::ALUMNO_ROL);
-        $item = $this->getDataFromJson('GET',self::PETITION);
-        $this->assertEquals(self::FIELDS,array_keys($item));
+        $item = $this->getDataFromJson(self::METHOD,self::PETITION);
+        $this->assertEquals(self::ALUMNO_FIELDS,array_keys($item));
     }
 
     public function testReturnCiclos()
     {
         $this->seed();
         $this->actingAsRol(self::ALUMNO_ROL);
-        $item = $this->getDataFromJson('GET',self::PETITION)['ciclos'];
+        $item = $this->getDataFromJson(self::METHOD,self::PETITION)['ciclos'];
         $this->assertEquals(3,count($item));
     }
 
@@ -45,7 +45,7 @@ class AlumnosShowTest extends FeatureTestCase
     {
         $this->seed();
         $this->actingAsRol(self::ALUMNO_ROL);
-        $this->expectedForbidden('GET', self::WRONG_PETITION);
+        $this->expectedForbidden(self::METHOD, self::WRONG_PETITION);
 
     }
 

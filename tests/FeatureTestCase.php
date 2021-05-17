@@ -12,11 +12,17 @@ abstract class FeatureTestCase extends TestCase
 {
     use RefreshDatabase;
 
-    const ALUMNO_ROL = 7;
-    const EMPRESA_ROL = 5;
     const ADMIN_ROL = 2;
     const RESPONSABLE_ROL = 3;
+    const EMPRESA_ROL = 5;
+    const ALUMNO_ROL = 7;
     const FAKE_ROL = 37;
+    const ID_EMPRESA_WITH_OFFERS = 5;
+    const ID_EMPRESA_WITHOUT_OFFERS = 6;
+    const ALUMNO_FIELDS = ['id','nombre','apellidos','domicilio','info','bolsa','cv_enlace','telefono','email','ciclos','created_at','updated_at'];
+    const CICLOS_FIELDS = ['id','codigo','ciclo','Dept','cDept','vDept','responsable','vCiclo','cCiclo'];
+    const EMPRESA_FIELDS = ['id','cif','nombre','domicilio','localidad','contacto','telefono','email','web','descripcion','created_at','updated_at'];
+
 
     protected function actingAsRol($rol){
         $user =  User::where('rol',$rol)->first();

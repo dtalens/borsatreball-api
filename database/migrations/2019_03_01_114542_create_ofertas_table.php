@@ -25,7 +25,6 @@ class CreateOfertasTable extends Migration {
 			$table->string('email', 50)->nullable();
 			$table->boolean('mostrar_contacto')->default(true);
 			$table->boolean('validada')->default(false);
-			$table->integer('any')->nullable();
 			$table->boolean('estudiando')->nullable();
 			$table->boolean('archivada')->default(false);
 		});
