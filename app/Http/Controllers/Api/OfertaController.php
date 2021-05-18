@@ -16,7 +16,29 @@ use Illuminate\Support\Facades\DB;
  * path="/api/ofertas",
  * summary="Dades de les ofertes",
  * description="Torna les dades de les ofertes segons usuari",
- * operationId="indexAlumnes",
+ * operationId="indexOfertas",
+ * tags={"ofertas"},
+ * security={ {"apiAuth": {} }},
+ * @OA\Response(
+ *    response=200,
+ *    description="Ofertes segons el permis",
+ *    @OA\JsonContent(
+ *        @OA\Property(
+ *          property="data",
+ *          type="array",
+ *          @OA\Items(ref="#/components/schemas/OfertaResource")
+ *        )
+ *    )
+ *   )
+ * )
+ */
+
+/**
+ * @OA\Get(
+ * path="/api/ofertas-arxiu",
+ * summary="Dades de les ofertes",
+ * description="Torna les dades de les ofertes segons usuari",
+ * operationId="indexOfertasArchivadas",
  * tags={"ofertas"},
  * security={ {"apiAuth": {} }},
  * @OA\Response(
@@ -126,8 +148,10 @@ class OfertaController extends ApiBaseController
         $oferta = Oferta::find($id);
         $oferta->validada = $request->validada;
         $oferta->save();
-        foreach ($this->lookStudents($oferta) as $alumno){
-            User::find($alumno->id_alumno)->notify(new ValidateOffer($oferta->id));
+        if ($oferta->validada) {
+            foreach ($this->lookStudents($oferta) as $alumno) {
+                User::find($alumno->id_alumno)->notify(new ValidateOffer($oferta->id));
+            }
         }
 
         return new $this->resource($oferta);

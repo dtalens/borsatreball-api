@@ -58,9 +58,15 @@ class OfertasIndexTest extends FeatureTestCase
         $user = $this->actingAsUser(self::ID_EMPRESA_WITH_OFFERS);
         $items = $this->getDataFromJson('GET',self::PETITION);
         $this->assertEquals(count($items),2);
+
+    }
+
+    public function testIndexEnterpriseReturnNotValidada()
+    {
+        $this->seed();
         $this->actingAsUser(self::ID_EMPRESA_WITHOUT_OFFERS);
         $items = $this->getDataFromJson('GET',self::PETITION);
-        $this->assertEquals(count($items),0);
+        $this->assertEquals(count($items),1);
     }
 
 

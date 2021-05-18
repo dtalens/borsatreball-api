@@ -20,6 +20,8 @@ class OfertasTableSeeder extends Seeder
             'activa'=>'1']);
         Oferta::create(['id'=>3,'id_empresa'=>'6','validada'=>1,'estudiando'=>0,
             'activa'=>'0','archivada'=>1]);
+        Oferta::create(['id'=>4,'id_empresa'=>'6','validada'=>0,'estudiando'=>0,
+            'activa'=>'1']);
 
     }
 }

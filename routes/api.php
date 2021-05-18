@@ -38,7 +38,7 @@ Route::group(['middleware' => 'auth:api'], function() {
         [   'users' => 'Api\UserController',
             'ofertas' => 'Api\OfertaController',
         ]);
-    Route::put('ofertas/{id}/validar','Api\OfertaController@Valida');
+
     Route::put('ofertas/{id}/alumno', 'Api\OfertaController@AlumnoInterested');
     // Modificada
     Route::put('alumnos/{alumno}/ciclo/{id}','Api\AlumnoController@ValidaCiclo')->name('alumnos.ciclo.update');
@@ -62,6 +62,10 @@ Route::group(['middleware' => ['auth:api','role:administrador']], function() {
         ],
         ['except' => ['destroy','index','show']]);
 
+});
+
+Route::group(['middleware' => ['auth:api','role:administrador,responsable']], function() {
+    Route::put('ofertas/{id}/validar','Api\OfertaController@Valida');
 });
 
 Route::group([

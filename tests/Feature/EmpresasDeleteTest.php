@@ -6,10 +6,13 @@ use Tests\FeatureTestCase;
 
 class EmpresasDeleteTest extends FeatureTestCase
 {
-    const PETITION = 'api/empresas/6';
+    const PETITION = 'api/empresas/7';
     const PETITION_WITH_OFFER = 'api/empresas/5';
     const WRONG_PETITION = 'api/empresas/40';
     const METHOD = 'DELETE';
+
+
+
 
 
     public function testSuccesfulDelete(){
@@ -20,7 +23,7 @@ class EmpresasDeleteTest extends FeatureTestCase
             ->assertStatus(200)
             ->assertJson([
                 "data" => [
-                    "id" => 6,
+                    "id" => 7,
       ]]);
     }
 
@@ -47,12 +50,12 @@ class EmpresasDeleteTest extends FeatureTestCase
     public function testSelfUserSuccesful()
     {
         $this->seed();
-        $this->actingAsUser(6);
+        $this->actingAsUser(7);
         $this->json(self::METHOD, self::PETITION)
             ->assertStatus(200)
             ->assertJson([
                 "data" => [
-                    "id" => 6,
+                    "id" => 7,
                 ]]);
     }
 

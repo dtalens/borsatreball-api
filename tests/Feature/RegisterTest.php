@@ -2,10 +2,11 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Notifications\SignupActivate;
+use Illuminate\Notifications\Messages\MailMessage;
 use Tests\FeatureTestCase;
-
+use Illuminate\Support\Facades\Notification;
+use App\Models\User;
 
 class RegisterTest extends FeatureTestCase
 {
@@ -98,6 +99,9 @@ class RegisterTest extends FeatureTestCase
 
     public function testSuccessfulAlumnoWithCiclosRegistration()
     {
+        Notification::fake();
+        Notification::assertNothingSent();
+
 
         $alumnoData = [
             "nombre" => "John",
@@ -125,8 +129,12 @@ class RegisterTest extends FeatureTestCase
             ])
             ->decodeResponseJson()
             ->json()['data']['id'];
-        $this->actingAsRol(self::ADMIN_ROL);
 
+        Notification::assertSentTo(
+            [User::find($id)], SignupActivate::class
+        );
+
+        $this->actingAsRol(self::ADMIN_ROL);
         $alumno = $this->getDataFromJson('GET','api/alumnos')[2];
         $this->assertEquals(2,$alumno['ciclos'][0]['id_ciclo']);
         $this->assertEquals(4,$alumno['ciclos'][1]['id_ciclo']);
@@ -163,6 +171,8 @@ class RegisterTest extends FeatureTestCase
 
     public function testSuccessfulEmpresaRegistration()
     {
+        Notification::fake();
+        Notification::assertNothingSent();
         $empresaData = [
             "nombre" => "Aitex",
             "email" => "aitex@example.com",
@@ -177,7 +187,7 @@ class RegisterTest extends FeatureTestCase
 
         ];
         $this->seed();
-        $this->json('POST', 'api/auth/signup', $empresaData, ['Accept' => 'application/json'])
+        $id = $this->json('POST', 'api/auth/signup', $empresaData, ['Accept' => 'application/json'])
             ->assertStatus(201)
             ->assertJsonStructure([
                 "data" => [
@@ -187,7 +197,12 @@ class RegisterTest extends FeatureTestCase
                     "id",
                     "name",
                     "expires_at" ]
-            ]);
+            ])
+            ->decodeResponseJson()
+            ->json()['data']['id'];
+        Notification::assertSentTo(
+            [User::find($id)], SignupActivate::class
+        );
     }
 
     public function testFakeRolRegistration()

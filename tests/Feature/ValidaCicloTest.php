@@ -18,6 +18,7 @@ class ValidaCicloTest extends FeatureTestCase
         "any" => '',
         "validado" => false,
     ];
+    const METHOD = 'PUT';
 
     public function testvalidationYearError()
     {
@@ -28,7 +29,7 @@ class ValidaCicloTest extends FeatureTestCase
         ];
         $this->seed();
         $this->actingAsRol(self::RESPONSABLE_ROL);
-        $this->json('PUT', self::PETITION,$errorData)
+        $this->json(self::METHOD, self::PETITION,$errorData)
             ->assertStatus(422)
             ->assertJson([
                 "message" => "The given data was invalid.",
@@ -48,7 +49,7 @@ class ValidaCicloTest extends FeatureTestCase
         ];
         $this->seed();
         $this->actingAsRol(self::RESPONSABLE_ROL);
-        $ciclos = $this->getDataFromJson('PUT',self::PETITION,self::CICLODATA)['ciclos'];
+        $ciclos = $this->getDataFromJson(self::METHOD,self::PETITION,self::CICLODATA)['ciclos'];
         $this->assertEquals($expectedResult,$ciclos[2]);
     }
 
@@ -62,7 +63,7 @@ class ValidaCicloTest extends FeatureTestCase
         ];
         $this->seed();
         $this->actingAsRol(self::ADMIN_ROL);
-        $ciclos = $this->getDataFromJson('PUT',self::PETITION,self::DESCICLODATA)['ciclos'];
+        $ciclos = $this->getDataFromJson(self::METHOD,self::PETITION,self::DESCICLODATA)['ciclos'];
         $this->assertEquals($expectedResult,$ciclos[2]);
     }
 
@@ -75,6 +76,6 @@ class ValidaCicloTest extends FeatureTestCase
 
         $this->seed();
         $this->actingAsRol(self::ALUMNO_ROL);
-        $this->expectedForbidden('PUT', self::PETITION,self::CICLODATA);
+        $this->expectedForbidden(self::METHOD, self::PETITION,self::CICLODATA);
     }
 }
