@@ -761,7 +761,42 @@
                 ],
                 "summary": "Dades de les ofertes",
                 "description": "Torna les dades de les ofertes segons usuari",
-                "operationId": "indexAlumnes",
+                "operationId": "indexOfertas",
+                "responses": {
+                    "200": {
+                        "description": "Ofertes segons el permis",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/OfertaResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ofertas-arxiu": {
+            "get": {
+                "tags": [
+                    "ofertas"
+                ],
+                "summary": "Dades de les ofertes",
+                "description": "Torna les dades de les ofertes segons usuari",
+                "operationId": "indexOfertasArchivadas",
                 "responses": {
                     "200": {
                         "description": "Ofertes segons el permis",
@@ -807,6 +842,126 @@
                 "responses": {
                     "200": {
                         "description": "Alumne segons el permis",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/OfertaResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ofertas/{id}/validar": {
+            "put": {
+                "tags": [
+                    "ofertas"
+                ],
+                "summary": "Valida Oferta",
+                "description": "Torna les dades de l'oferta valida/desvalidada",
+                "operationId": "validaOfertas",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "validada": {
+                                        "title": "validada",
+                                        "description": "Oferta Validada",
+                                        "type": "boolean",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Oferta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/OfertaResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ofertas/{id}/alumno": {
+            "put": {
+                "tags": [
+                    "ofertas"
+                ],
+                "summary": "Muestra interes por la oferta",
+                "description": "Torna les dades de l'oferta",
+                "operationId": "InteresOfertas",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "interesado": {
+                                        "title": "interesado",
+                                        "description": "Interes",
+                                        "type": "boolean",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Oferta",
                         "content": {
                             "application/json": {
                                 "schema": {

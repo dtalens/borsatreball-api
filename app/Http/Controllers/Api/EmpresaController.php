@@ -185,7 +185,7 @@ class EmpresaController extends ApiBaseController
     }
 
     public function update(Request $request,$id){
-        if (selfAuth($id)) {
+        if (onlySelfAuth($id)) {
             $empresa = Empresa::findOrFail($id);
             $empresa->update($request->except(['id']));
             return new EmpresaResource($empresa);

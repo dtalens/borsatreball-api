@@ -52,25 +52,12 @@ class AlumnosUpdateTest extends FeatureTestCase
                     ]]);
     }
 
-    public function testSuccesfulAdminUpdate(){
+    public function testForbiddenAdminUpdate(){
 
         $this->seed();
         $user = $this->actingAsRol(self::ADMIN_ROL);
-        $this->json(self::METHOD, self::PETITION,SELF::COMPLETE_DATA_WITH_CICLO, ['Accept' => 'application/json'])
-            ->assertStatus(200)
-            ->assertJson([
-                "data" => [
-                    "id" => 3,
-                    "nombre" => "John",
-                    "apellidos" => "Doe",
-                    "domicilio" => 'C/Cid 99',
-                    "info" => 1,
-                    "bolsa" => 1,
-                    "cv_enlace" => null,
-                    "telefono" => "543345657",
-                    "email" => 'jgomis@cipfpbatoi.es',
-                    "ciclos" => [['id_alumno'=>3,'id_ciclo'=>2,'any'=>2016,'validado'=>1],['id_alumno'=>3,'id_ciclo'=>16,'any'=>null,'validado'=>0],['id_alumno'=>3,'id_ciclo'=>18,'any'=>null,'validado'=>0]]
-                ]]);
+        $this->expectedForbidden(self::METHOD, self::PETITION,self::COMPLETE_DATA_WITH_CICLO);
+
     }
 
     public function testSuccesfulUpdateManteinsValidadoCiclo(){

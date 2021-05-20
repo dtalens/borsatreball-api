@@ -64,6 +64,13 @@ function selfAuth($id){
     return false;
 }
 
+function onlySelfAuth($id){
+    if (AuthUser()->id == $id) {
+        return true;
+    }
+    return false;
+}
+
 
 
 

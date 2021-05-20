@@ -59,36 +59,25 @@ class EmpresasUpdateTest extends FeatureTestCase
                 ]]);
     }
 
-    public function testSuccesfulResponsableUpdate()
+    public function testForbiddenResponsableUpdate()
     {
         $this->seed();
-        $this->actingAsUser(2);
-        $this->json(self::METHOD, self::PETITION, self::COMPLETE_DATA, ['Accept' => 'application/json'])
-            ->assertStatus(200)
-            ->assertJson([
-                "data" => [
-                    "id" => 5,
-                    "cif" => '12344321Q',
-                    "nombre" => "Tomate Frito",
-                    "domicilio" => 'C/Cid 99',
-                    "localidad" => "IBI",
-                    "contacto" => 'Pepe',
-                    "telefono" => "543345657",
-                ]]);
+        $this->actingAsRol(self::RESPONSABLE_ROL);
+        $this->expectedForbidden(self::METHOD, self::PETITION, self::COMPLETE_DATA);
     }
 
     public function testFailWrongEnterpriseUpdate()
     {
         $this->seed();
         $this->actingAsUser(6);
-        $this->expectedForbidden(self::METHOD, self::PETITION, self::COMPLETE_DATA, ['Accept' => 'application/json']);
+        $this->expectedForbidden(self::METHOD, self::PETITION, self::COMPLETE_DATA);
     }
 
     public function testFailAlumnoUpdate()
     {
         $this->seed();
         $this->actingAsUser(3);
-        $this->expectedForbidden(self::METHOD, self::PETITION, self::COMPLETE_DATA, ['Accept' => 'application/json']);
+        $this->expectedForbidden(self::METHOD, self::PETITION, self::COMPLETE_DATA);
     }
 
     public function testUpdateNotChangeId()

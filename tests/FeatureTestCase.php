@@ -71,4 +71,10 @@ abstract class FeatureTestCase extends TestCase
             ]);
     }
 
+    protected function expectedRouteNotFound($method,$route,$data=[]){
+        $this->json($method, $route,$data,['Accept' => 'application/json'])
+            ->assertStatus(401);
+    }
+
+
 }

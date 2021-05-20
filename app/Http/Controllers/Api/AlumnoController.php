@@ -241,7 +241,7 @@ class AlumnoController extends ApiBaseController
 
     public function update(Request $request, $id)
     {
-        if (selfAuth($id)){
+        if (onlySelfAuth($id)){
             $alumno = Alumno::findOrFail($id);
             $alumno->update($request->except(['id']));
             if ($request->ciclos) {

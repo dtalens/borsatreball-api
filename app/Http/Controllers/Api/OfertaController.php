@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Oferta;
 use App\Http\Resources\OfertaResource;
+use App\Notifications\OfferStudent;
 use Illuminate\Http\Request;
 use App\Models\Alumno;
 use App\Models\Ciclo;
 use App\Models\User;
 use App\Notifications\ValidateOffer;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\UnauthorizedException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @OA\Get(
@@ -82,6 +85,82 @@ use Illuminate\Support\Facades\DB;
  * )
  */
 
+/**
+ * @OA\Put(
+ * path="/api/ofertas/{id}/validar",
+ * summary="Valida Oferta",
+ * description="Torna les dades de l'oferta valida/desvalidada",
+ * operationId="validaOfertas",
+ * tags={"ofertas"},
+ * security={ {"apiAuth": {} }},
+ * @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ * ),
+ * @OA\RequestBody(
+ *    required=true,
+ *    @OA\JsonContent(
+ *     @OA\Property(
+ *      property = "validada",
+ *      title="validada",
+ *      description="Oferta Validada",
+ *      example="1",
+ *      type="boolean"),
+ *     )
+ * ),
+ * @OA\Response(
+ *    response=200,
+ *    description="Oferta",
+ *    @OA\JsonContent(
+ *        @OA\Property(
+ *          property="data",
+ *          type="array",
+ *          @OA\Items(ref="#/components/schemas/OfertaResource")
+ *        )
+ *    )
+ *   )
+ * )
+ */
+
+/**
+ * @OA\Put(
+ * path="/api/ofertas/{id}/alumno",
+ * summary="Muestra interes por la oferta",
+ * description="Torna les dades de l'oferta",
+ * operationId="InteresOfertas",
+ * tags={"ofertas"},
+ * security={ {"apiAuth": {} }},
+ * @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ * ),
+ * @OA\RequestBody(
+ *    required=true,
+ *    @OA\JsonContent(
+ *     @OA\Property(
+ *      property = "interesado",
+ *      title="interesado",
+ *      description="Interes",
+ *      example="1",
+ *      type="boolean"),
+ *     )
+ * ),
+ * @OA\Response(
+ *    response=200,
+ *    description="Oferta",
+ *    @OA\JsonContent(
+ *        @OA\Property(
+ *          property="data",
+ *          type="array",
+ *          @OA\Items(ref="#/components/schemas/OfertaResource")
+ *        )
+ *    )
+ *   )
+ * )
+ */
+
 class OfertaController extends ApiBaseController
 {
     use traitRelation;
@@ -121,8 +200,22 @@ class OfertaController extends ApiBaseController
 
     public function alumnoInterested(Request $request,$id)
     {
-        Oferta::find($id)->alumnos()->sync([AuthUser()->id =>['interesado'=>$request->interesado]]);
-        return response($this->show($id),200);
+        if (AuthUser()->isAlumno()) {
+            $oferta = Oferta::find($id);
+            if ($oferta->validada && !$oferta->archivada) {
+                if ($request->interesado) {
+                    $oferta->alumnos()->syncWithoutDetaching([AuthUser()->id]);
+                    $oferta->Empresa->User->notify(new OfferStudent($oferta));
+                } else {
+                    $oferta->alumnos()->detach([AuthUser()->id]);
+                }
+                return new OfertaResource($oferta);
+            } else {
+                throw new NotFoundHttpException('Oferta No valida');
+            }
+        } else {
+            throw new UnauthorizedException('Forbidden.');
+        }
     }
 
     public function destroy($id)
