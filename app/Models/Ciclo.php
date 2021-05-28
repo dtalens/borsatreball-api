@@ -20,7 +20,7 @@ class Ciclo extends Model
 
     public function Responsable()
     {
-        return $this->hasOne(User::class,'id','responsable');
+        return $this->hasOne(Responsable::class,'id','responsable');
     }
 
     public function Alumnos()
