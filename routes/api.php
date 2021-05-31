@@ -57,6 +57,7 @@ Route::group(['middleware' => ['auth:api','role:administrador,responsable,alumno
 });
 
 Route::group(['middleware' => ['auth:api','role:administrador']], function() {
+    Route::apiResource('responsables','Api\ResponsableController',['except'=>['update']]);
     Route::apiResources(
         [   'ciclos'    =>'Api\CicloController'
         ],
@@ -66,6 +67,7 @@ Route::group(['middleware' => ['auth:api','role:administrador']], function() {
 
 Route::group(['middleware' => ['auth:api','role:administrador,responsable']], function() {
     Route::put('ofertas/{id}/validar','Api\OfertaController@Valida');
+    Route::put('responsables/{id}','Api\ResponsableController@update');
 });
 
 Route::group([

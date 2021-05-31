@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Responsable;
 use App\Models\User;
 use App\Models\Alumno;
 use App\Models\Empresa;
@@ -101,7 +102,11 @@ class AuthController extends Controller
                 'domicilio'=>$request->domicilio,'telefono'=>$request->telefono,
                 'cif'=>$request->cif,'localidad'=>$request->localidad,'contacto'=>$request->contacto,
                 'web'=>$request->web,'descripcion'=>$request->descripcion]);
-            } else {
+            } elseif ($user->isResponsable() || $user->isAdmin()) {
+                Responsable::create(['nombre' => $request->nombre, 'id' => $user->id,
+                    'apellidos'=>$request->apellidos]);
+            }
+            else {
                 throw new UnauthorizedException('The given rol was invalid.');
             }
         });

@@ -15,7 +15,7 @@ class AlterCiclosTable extends Migration {
 		Schema::table('ciclos', function(Blueprint $table)
 		{
             $table->integer('responsable')->unsigned()->nullable()->change();
-			$table->foreign('responsable', 'responsable_ciclos_foreign')->references('id')->on('responsables')->onUpdate('CASCADE')->onDelete('RESTRICT');
+			$table->foreign('responsable', 'responsable_ciclos_foreign')->references('id')->on('responsables')->onUpdate('CASCADE')->onDelete('SET NULL');
         });
 	}
 

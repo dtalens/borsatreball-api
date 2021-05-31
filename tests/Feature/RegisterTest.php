@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Notifications\SignupActivate;
-use Illuminate\Notifications\Messages\MailMessage;
 use Tests\FeatureTestCase;
 use Illuminate\Support\Facades\Notification;
 use App\Models\User;
@@ -30,8 +29,6 @@ class RegisterTest extends FeatureTestCase
                     "password" => ["The password field is required."],
                     "rol" => ["The rol field is required."],
                     "nombre" => ["The nombre field is required."],
-                    "domicilio" => ["The domicilio field is required."],
-                    "telefono" => ["The telefono field is required."],
                 ]
             ]);
     }
@@ -46,9 +43,10 @@ class RegisterTest extends FeatureTestCase
                     "email" => ["The email field is required."],
                     "password" => ["The password field is required."],
                     "nombre" => ["The nombre field is required."],
-                    "domicilio" => ["The domicilio field is required."],
-                    "telefono" => ["The telefono field is required."],
-                    "apellidos" => ["The apellidos field is required when rol is ".self::ALUMNO_ROL."."]
+                    "domicilio" => ["The domicilio field is required when rol is ".self::ALUMNO_ROL."."],
+                    "telefono" => ["The telefono field is required when rol is ".self::ALUMNO_ROL."."],
+                    "apellidos" => ["The apellidos field is required when rol is ".self::ALUMNO_ROL."."],
+                    "ciclos" => ["The ciclos field is required when rol is ".self::ALUMNO_ROL."."]
                 ]
             ]);
     }
@@ -63,8 +61,8 @@ class RegisterTest extends FeatureTestCase
                     "email" => ["The email field is required."],
                     "password" => ["The password field is required."],
                     "nombre" => ["The nombre field is required."],
-                    "domicilio" => ["The domicilio field is required."],
-                    "telefono" => ["The telefono field is required."],
+                    "domicilio" => ["The domicilio field is required when rol is ".self::EMPRESA_ROL."."],
+                    "telefono" => ["The telefono field is required when rol is ".self::EMPRESA_ROL."."],
                     "cif" => ["The cif field is required when rol is ".self::EMPRESA_ROL."."],
                     "localidad" => ["The localidad field is required when rol is ".self::EMPRESA_ROL."."],
                     "contacto" => ["The contacto field is required when rol is ".self::EMPRESA_ROL."."]

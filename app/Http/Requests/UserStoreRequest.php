@@ -146,20 +146,22 @@ class UserStoreRequest extends FormRequest
 
             // camps comuns
             'nombre'   => 'required',
-            'domicilio' => 'required',
-            'telefono'    => 'required',
+            // camps alumno i resposable
+            'apellidos' => 'requiredIf:rol,'.config('role.alumno').','.config('role.responsable'),
+            //camps alumno i empresa
+            'domicilio' => 'requiredIf:rol,'.config('role.alumno').','.config('role.empresa'),
+            'telefono'    => 'requiredIf:rol,'.config('role.alumno').','.config('role.empresa'),
                 // camps soles empresa
             'cif'      => 'required_if:rol,'.config('role.empresa'),
             'localidad'=> 'required_if:rol,'.config('role.empresa'),
             'contacto' => 'required_if:rol,'.config('role.empresa'),
-            'web'         => 'exclude_if:rol,'.config('role.alumno'),
-            'descripcion' => 'exclude_if:rol,'.config('role.alumno'),
+            'web'         => 'exclude_if:rol,'.config('role.alumno').','.config('role.responsable'),
+            'descripcion' => 'exclude_if:rol,'.config('role.alumno').','.config('role.responsable'),
 
-                // camps soles alumnop
-            'apellidos' => 'requiredIf:rol,'.config('role.alumno'),
-            'info' => 'exclude_if:rol,'.config('role.empresa'),
-            'bolsa' => 'exclude_if:rol,'.config('role.empresa'),
-            'cv_enlace' => 'exclude_if:rol,'.config('role.empresa'),
+            // camps soles alumnop
+            'info' => 'exclude_if:rol,'.config('role.empresa').','.config('role.responsable'),
+            'bolsa' => 'exclude_if:rol,'.config('role.empresa').','.config('role.responsable'),
+            'cv_enlace' => 'exclude_if:rol,'.config('role.empresa').','.config('role.responsable'),
             'ciclos' => 'requiredIf:rol,'.config('role.alumno')
         ];
     }

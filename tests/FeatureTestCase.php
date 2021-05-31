@@ -20,7 +20,8 @@ abstract class FeatureTestCase extends TestCase
     const ID_EMPRESA_WITH_OFFERS = 5;
     const ID_EMPRESA_WITHOUT_OFFERS = 6;
     const ALUMNO_FIELDS = ['id','nombre','apellidos','domicilio','info','bolsa','cv_enlace','telefono','email','ciclos','created_at','updated_at'];
-    const CICLOS_FIELDS = ['id','codigo','ciclo','Dept','cDept','vDept','responsable','vCiclo','cCiclo'];
+    const RESPONSABLE_FIELDS = ['id','nombre','apellidos','email','ciclos'];
+    const CICLOS_FIELDS = ['id','codigo','ciclo','Dept','cDept','vDept','responsable','name','vCiclo','cCiclo'];
     const EMPRESA_FIELDS = ['id','cif','nombre','domicilio','localidad','contacto','telefono','email','web','descripcion','created_at','updated_at'];
     const OFERTA_FIELDS = ['id','id_empresa','descripcion','puesto','tipo_contrato','activa','contacto','telefono','email','mostrar_contacto','validada','estudiando','archivada','ciclos','empresa','alumnos','created_at','updated_at'];
     const OFERTA_FIELDS_ALUMNO = ['id','id_empresa','descripcion','puesto','tipo_contrato','activa','contacto','telefono','email','mostrar_contacto','validada','estudiando','archivada','ciclos','empresa','interesado','created_at','updated_at'];

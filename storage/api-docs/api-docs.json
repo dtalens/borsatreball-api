@@ -986,6 +986,234 @@
                 ]
             }
         },
+        "/api/responsables": {
+            "get": {
+                "tags": [
+                    "responsables"
+                ],
+                "summary": "Dades dels responsables",
+                "description": "Torna les dades dels responsables amb els cicles",
+                "operationId": "indexResponsables",
+                "responses": {
+                    "200": {
+                        "description": "Responsables segons el permis",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ResponsableResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "responsables"
+                ],
+                "summary": "Guardar responsable",
+                "description": "Guardar perfil responsable",
+                "operationId": "storeResponsables",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ResponsableRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Responsable correctament donat d'alta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponsableResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Credencials no vàlides"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/responsables/{id}": {
+            "get": {
+                "tags": [
+                    "responsables"
+                ],
+                "summary": "Dades d'un responsable",
+                "description": "Torna les dades d'un responsable amb els cicles",
+                "operationId": "showResponsables",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Responsable",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ResponsableResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "responsables"
+                ],
+                "summary": "Modificar responsable",
+                "description": "Modificar perfil responsable",
+                "operationId": "updateResponsables",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ResponsableRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Responsable correctament donat d'alta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponsableResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Credencials no vàlides"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reponsables/{id}": {
+            "delete": {
+                "tags": [
+                    "responsables"
+                ],
+                "summary": "Esborra Responsable",
+                "description": "Torna les dades del responsable esborrat",
+                "operationId": "deleteResponsables",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Responsable esborrat",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ResponsableResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
         "/api/users/{email}/available": {
             "get": {
                 "tags": [
@@ -1353,6 +1581,34 @@
                     "name": "Empresa"
                 }
             },
+            "ResponsableRequest": {
+                "title": "responsable",
+                "description": "Fillable responsables",
+                "properties": {
+                    "id": {
+                        "title": "id",
+                        "description": "Identificador d'usuari",
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "nombre": {
+                        "title": "nombre",
+                        "description": "Nom del responsable",
+                        "type": "string",
+                        "example": "Jose Manuel"
+                    },
+                    "apellidos": {
+                        "title": "apelllidos",
+                        "description": "Cognoms del responsable",
+                        "type": "string",
+                        "example": "Miró García"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "responsable"
+                }
+            },
             "UserStoreRequest": {
                 "title": "UserStoreRequest",
                 "description": "Registrar Usuari",
@@ -1631,6 +1887,12 @@
                         "type": "integer",
                         "example": "216"
                     },
+                    "name": {
+                        "title": "Nom responsable",
+                        "description": "Nom reponsable del cicle",
+                        "type": "string",
+                        "example": "Juan Segura"
+                    },
                     "cCiclo": {
                         "title": "Cicle en castellà",
                         "description": "Cicle en castellà",
@@ -1705,6 +1967,22 @@
                 "type": "object",
                 "xml": {
                     "name": "Empresa"
+                }
+            },
+            "KeyResource": {
+                "title": "Keys",
+                "description": "Keys",
+                "properties": {
+                    "id": {
+                        "title": "ID cicle",
+                        "description": "Identificador",
+                        "type": "integer",
+                        "example": "2"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "KeysResource"
                 }
             },
             "LoginResource": {
@@ -1976,6 +2254,40 @@
                 "type": "object",
                 "xml": {
                     "name": "OfertasResource"
+                }
+            },
+            "ResponsableResource": {
+                "title": "Alumne",
+                "description": "Dades d'alumne",
+                "properties": {
+                    "id": {
+                        "title": "id",
+                        "description": "Identificador d'usuari",
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "nombre": {
+                        "title": "nombre",
+                        "description": "Nom de l'alumne",
+                        "type": "string",
+                        "example": "Jose Manuel"
+                    },
+                    "apellidos": {
+                        "title": "apelllidos",
+                        "description": "Cognoms de l'alumne",
+                        "type": "string",
+                        "example": "Miró García"
+                    },
+                    "ciclos": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/KeyResource"
+                        }
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Alumno"
                 }
             }
         },
