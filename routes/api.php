@@ -28,7 +28,7 @@ Route::get('ciclos','Api\CicloController@index');
 Route::get('users/{email}/available','Api\UserController@isEmailAvailable');
 
 Route::group(['middleware' => 'auth:api'], function() {
-    Route::get('/menu', 'Api\MenuController@index');
+    Route::get('menu', 'Api\MenuController@index');
     Route::get('ciclos/{id}','Api\CicloController@show');
     Route::apiResources(
         [   'alumnos'   => 'Api\AlumnoController',
@@ -62,6 +62,7 @@ Route::group(['middleware' => ['auth:api','role:administrador']], function() {
         [   'ciclos'    =>'Api\CicloController'
         ],
         ['except' => ['destroy','index','show']]);
+    Route::put('menu/{id}', 'Api\MenuController@update');
 
 });
 

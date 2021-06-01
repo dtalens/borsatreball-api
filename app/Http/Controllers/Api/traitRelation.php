@@ -5,7 +5,7 @@
  * Date: 2019-03-24
  * Time: 09:56
  */
-
+/**
 namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 
@@ -24,4 +24,4 @@ trait traitRelation
     abstract protected function relationShip();
     abstract protected function adviseSomeOne($registro);
 
-}
+}*/

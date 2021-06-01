@@ -163,15 +163,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class OfertaController extends ApiBaseController
 {
-    use traitRelation;
 
     public function model(){
         return 'Oferta';
     }
-    protected function relationShip()
-    {
-        return 'ciclos';
-    }
+
 
     public function index()
     {
