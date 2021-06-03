@@ -38,6 +38,7 @@ abstract class ApiBaseController extends Controller
         return response("No he pogut Esborrar $id",400);
     }
 
+
     protected function response(array $errors)
     {
         $transformed = [];
@@ -53,5 +54,6 @@ abstract class ApiBaseController extends Controller
             'errors' => $transformed
         ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
     }
+
 
 }

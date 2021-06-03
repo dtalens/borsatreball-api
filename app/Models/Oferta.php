@@ -42,14 +42,7 @@ class Oferta extends Model
         return $ofertas;
     }
 
-    /*
-    public function adviseResponsibles()
-    {
-        foreach ($this->Ciclos as $ciclo){
-            $ciclo->Responsable->notify(new ValidateOffer($this->id));
-        }
-    }
-    */
+
 
 
 

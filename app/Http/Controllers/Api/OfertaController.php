@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\OfertaStoreRequest;
 use App\Models\Oferta;
 use App\Http\Resources\OfertaResource;
 use App\Notifications\OfferStudent;
@@ -13,6 +14,7 @@ use App\Notifications\ValidateOffer;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\UnauthorizedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use function Symfony\Component\String\s;
 
 /**
  * @OA\Get(
@@ -161,6 +163,33 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * )
  */
 
+/**
+ * @OA\Post(
+ * path="/api/ofertas",
+ * summary="Guardar Oferta",
+ * description="Guardar Oferta",
+ * operationId="storeOfertas",
+ * tags={"ofertas"},
+ * security={ {"apiAuth": {} }},
+ * @OA\RequestBody(
+ *    required=true,
+ *    @OA\JsonContent(ref="#/components/schemas/OfertaStoreRequest")
+ * ),
+ * @OA\Response(
+ *    response=200,
+ *    description="Oferta correctament donada d'alta",
+ *    @OA\JsonContent(ref="#/components/schemas/OfertaResource")
+ * ),
+ * @OA\Response(
+ *    response=422,
+ *    description="Wrong credentials response",
+ *    @OA\JsonContent(
+ *       @OA\Property(property="error", type="string", example="Credencials no vàlides")
+ *        )
+ *     )
+ * )
+ */
+
 class OfertaController extends ApiBaseController
 {
 
@@ -227,8 +256,9 @@ class OfertaController extends ApiBaseController
     protected function adviseSomeOne($oferta)
     {
         foreach ($oferta->Ciclos as $ciclo){
-            if (! $oferta->archivada)
-                $ciclo->Responsable->notify(new ValidateOffer($oferta->id));
+            if (! $oferta->archivada) {
+                $ciclo->Responsable->User->notify(new ValidateOffer($oferta->id));
+            }
         }
     }
 
@@ -239,7 +269,7 @@ class OfertaController extends ApiBaseController
         $oferta->save();
         if ($oferta->validada) {
             foreach ($this->lookStudents($oferta) as $alumno) {
-                User::find($alumno->id_alumno)->notify(new ValidateOffer($oferta->id));
+                User::find($alumno->id_alumno)->notify(new OfferStudent($oferta->id));
             }
         }
 
@@ -268,5 +298,15 @@ class OfertaController extends ApiBaseController
             ->get();
     }
 
+    public function store(OfertaStoreRequest $request){
+        if (selfAuth($request->id_empresa)) {
+            $oferta = Oferta::create($request->except(['ciclos']));
+            $oferta->Ciclos()->sync($request->ciclos);
+            $this->adviseSomeOne($oferta);
+        } else {
+            throw new UnauthorizedException('Forbidden.');
+        }
+        return new OfertaResource($oferta);
+    }
 }
 

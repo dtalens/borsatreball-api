@@ -27,6 +27,7 @@ Route::group(['prefix' => 'auth'], function () {
 Route::get('ciclos','Api\CicloController@index');
 Route::get('users/{email}/available','Api\UserController@isEmailAvailable');
 
+
 Route::group(['middleware' => 'auth:api'], function() {
     Route::get('menu', 'Api\MenuController@index');
     Route::get('ciclos/{id}','Api\CicloController@show');
@@ -35,9 +36,8 @@ Route::group(['middleware' => 'auth:api'], function() {
         ],
         ['except' => ['destroy','store']]);
     Route::apiResources(
-        [   'users' => 'Api\UserController',
-            'ofertas' => 'Api\OfertaController',
-        ]);
+        [   'users' => 'Api\UserController']);
+    Route::apiResource('ofertas','Api\OfertaController',['except'=>['update','store']]);
 
     Route::put('ofertas/{id}/alumno', 'Api\OfertaController@AlumnoInterested');
     // Modificada
@@ -50,6 +50,7 @@ Route::group(['middleware' => ['auth:api','role:administrador,responsable,empres
         [   'empresas'  => 'Api\EmpresaController',
         ],
         ['except' => ['store']]);
+    Route::post('ofertas','Api\OfertaController@store')->name('ofertas.store');
 });
 
 Route::group(['middleware' => ['auth:api','role:administrador,responsable,alumno']], function() {

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Notifications\OfferStudent;
 use App\Notifications\ValidateOffer;
 use Illuminate\Support\Facades\Notification;
 use Tests\FeatureTestCase;
@@ -30,9 +31,9 @@ class ValidaOfertaTest extends FeatureTestCase
         $oferta = $this->getDataFromJson(self::METHOD,self::PETITION,self::VALIDADA);
         $this->assertEquals(1,$oferta['validada']);
         Notification::assertSentTo(
-            [User::find(3)], ValidateOffer::class);
+            [User::find(3)], OfferStudent::class);
         Notification::assertNotSentTo(
-            [User::find(4)], ValidateOffer::class);
+            [User::find(4)], OfferStudent::class);
     }
 
 
@@ -46,7 +47,7 @@ class ValidaOfertaTest extends FeatureTestCase
         $oferta = $this->getDataFromJson(self::METHOD,self::PETITION,self::NOVALIDADA);
         $this->assertEquals(0,$oferta['validada']);
         Notification::assertNotSentTo(
-            [User::find(3)], ValidateOffer::class);
+            [User::find(3)], OfferStudent::class);
     }
 
     public function testNotAllowed()

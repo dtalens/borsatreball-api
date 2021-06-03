@@ -787,6 +787,57 @@
                         "apiAuth": []
                     }
                 ]
+            },
+            "post": {
+                "tags": [
+                    "ofertas"
+                ],
+                "summary": "Guardar Oferta",
+                "description": "Guardar Oferta",
+                "operationId": "storeOfertas",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OfertaStoreRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Oferta correctament donada d'alta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OfertaResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Credencials no vàlides"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
             }
         },
         "/api/ofertas-arxiu": {
@@ -1579,6 +1630,94 @@
                 "type": "object",
                 "xml": {
                     "name": "Empresa"
+                }
+            },
+            "OfertaStoreRequest": {
+                "title": "Oferta",
+                "description": "Fillable Ofertas",
+                "properties": {
+                    "id": {
+                        "title": "id",
+                        "description": "Identificador d'oferta",
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "id_empresa": {
+                        "title": "Empresa de la Oferta",
+                        "description": "Empresa de l'oferta",
+                        "type": "integer",
+                        "example": "23"
+                    },
+                    "descripcion": {
+                        "title": "descripcion",
+                        "description": "Descripció de l'oferta",
+                        "type": "string",
+                        "example": "Para arreglar carreteras comarcales"
+                    },
+                    "puesto": {
+                        "title": "puesto",
+                        "description": "Puesto de l'oferta",
+                        "type": "string",
+                        "example": "Peón Caminero"
+                    },
+                    "tipo_contrato": {
+                        "title": "Tipo de contrato",
+                        "description": "Tipo de contrato de la oferta",
+                        "type": "string",
+                        "example": "Indefinido"
+                    },
+                    "activa": {
+                        "title": "activa",
+                        "description": "Oferta activa",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "contacto": {
+                        "title": "contacto",
+                        "description": "Persona de contacte de l'empresa",
+                        "type": "string",
+                        "example": "Pepe Botera"
+                    },
+                    "telefono": {
+                        "title": "telefono",
+                        "description": "Telèfon de contacto",
+                        "type": "string",
+                        "example": "666666666"
+                    },
+                    "email": {
+                        "title": "email",
+                        "description": "email de contacte",
+                        "type": "string",
+                        "example": "pepebotera@gmail.com"
+                    },
+                    "mostrar_contacto": {
+                        "title": "Mostrar contacte",
+                        "description": "Mostre contacte de l'empresa",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "validada": {
+                        "title": "validada",
+                        "description": "Oferta Validada",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "estudiando": {
+                        "title": "estudiando",
+                        "description": "Acepta alumnos",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "archivada": {
+                        "title": "archivada",
+                        "description": "Oferta Archivada",
+                        "type": "boolean",
+                        "example": "0"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Oferta"
                 }
             },
             "ResponsableRequest": {
