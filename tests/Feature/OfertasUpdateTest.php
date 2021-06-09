@@ -9,20 +9,17 @@ use App\Notifications\ValidateOffer;
 use Illuminate\Support\Facades\Notification;
 use Tests\FeatureTestCase;
 
-class OfertasStoreTest extends FeatureTestCase
+class OfertasUpdateTest extends FeatureTestCase
 {
-    const PETITION = 'api/ofertas';
-    const METHOD = 'POST';
+    const PETITION = 'api/ofertas/4';
+    const METHOD = 'PUT';
     const DATA = [
-        'id_empresa' => '6',
-        'descripcion' => 'Contrato por obra y servicios hasta acabar obra',
-        'estudiando' => 1,
-        'ciclos' => [2]
+        'descripcion' => 'Contrato por obra',
+        'estudiando' => 0,
+        'ciclos' => [12]
     ];
     const INCOMPLETE_DATA = [
-        'descripcion' => 'Contrato por obra y servicios hasta acabar obra',
-        'estudiando' => 1,
-        'ciclos' => [2]
+        'id_empresa' => 5
     ];
 
     public function testUnauthenticated()
@@ -51,7 +48,7 @@ class OfertasStoreTest extends FeatureTestCase
         $this->seed();
         $this->actingAsUser(self::ID_EMPRESA_WITHOUT_OFFERS);
         $id = $this->json(self::METHOD, self::PETITION, self::DATA, ['Accept' => 'application/json'])
-            ->assertStatus(201)
+            ->assertStatus(200)
             ->assertJsonStructure([
                 "data" => [
                     "id",
@@ -64,11 +61,13 @@ class OfertasStoreTest extends FeatureTestCase
             ->decodeResponseJson()
             ->json()['data']['id'];
         $oferta = Oferta::find($id);
+        $this->assertEquals($oferta->validada,0);
         $this->assertEquals(0,$oferta->archivada);
         foreach ($oferta->ciclos as $ciclo) {
             Notification::assertSentTo(
                 [User::find($ciclo->responsable)], ValidateOffer::class);
         }
+
     }
 
     public function testSuccesfulResponsable()
@@ -78,7 +77,7 @@ class OfertasStoreTest extends FeatureTestCase
         $this->seed();
         $this->actingAsRol(self::RESPONSABLE_ROL);
         $id = $this->json(self::METHOD, self::PETITION, self::DATA, ['Accept' => 'application/json'])
-            ->assertStatus(201)
+            ->assertStatus(200)
             ->assertJsonStructure([
                 "data" => [
                     "id",
@@ -91,6 +90,8 @@ class OfertasStoreTest extends FeatureTestCase
             ->decodeResponseJson()
             ->json()['data']['id'];
         $oferta = Oferta::find($id);
+        $this->assertEquals('Contrato por obra',$oferta->descripcion);
+        $this->assertEquals(0,$oferta->validada);
         $this->assertEquals(0,$oferta->archivada);
         foreach ($oferta->ciclos as $ciclo) {
             Notification::assertSentTo(
@@ -98,7 +99,7 @@ class OfertasStoreTest extends FeatureTestCase
         }
     }
 
-    public function testRequiredFieldsForStore()
+    public function testRequiredFieldsForUpdate()
     {
         $this->seed();
         $this->actingAsUser(self::ID_EMPRESA_WITHOUT_OFFERS);
@@ -107,10 +108,8 @@ class OfertasStoreTest extends FeatureTestCase
             ->assertJson([
                 "message" => "The given data was invalid.",
                 "errors" => [
-                    "id_empresa" => ["The id empresa field is required."]
+                    "id_empresa" => ["validation.prohibited"]
                 ]
             ]);
     }
-
-
 }

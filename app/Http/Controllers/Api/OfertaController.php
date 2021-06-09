@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\OfertaStoreRequest;
+use App\Http\Requests\OfertaUpdateRequest;
 use App\Models\Oferta;
 use App\Http\Resources\OfertaResource;
 use App\Notifications\OfferStudent;
@@ -190,6 +191,38 @@ use function Symfony\Component\String\s;
  * )
  */
 
+/**
+ * @OA\Put(
+ * path="/api/ofertas/{id}",
+ * summary="Modificar Oferta",
+ * description="Modificar Oferta",
+ * operationId="updateOfertas",
+ * tags={"ofertas"},
+ * security={ {"apiAuth": {} }},
+ * @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ * ),
+ * @OA\RequestBody(
+ *    required=true,
+ *    @OA\JsonContent(ref="#/components/schemas/OfertaStoreRequest")
+ * ),
+ * @OA\Response(
+ *    response=200,
+ *    description="Oferta correctament donada d'alta",
+ *    @OA\JsonContent(ref="#/components/schemas/OfertaResource")
+ * ),
+ * @OA\Response(
+ *    response=422,
+ *    description="Wrong credentials response",
+ *    @OA\JsonContent(
+ *       @OA\Property(property="error", type="string", example="Credencials no vàlides")
+ *        )
+ *     )
+ * )
+ */
+
 class OfertaController extends ApiBaseController
 {
 
@@ -245,12 +278,20 @@ class OfertaController extends ApiBaseController
 
     public function destroy($id)
     {
-        $oferta = Oferta::find($id);
-        $oferta->archivada = 1;
+        $oferta = Oferta::findOrFail($id);
+        if (selfAuth($oferta->id_empresa)) {
+            $oferta->archivada = 1;
+            if ($oferta->save()) {
+                return new OfertaResource($oferta);
+            }
+            else {
+                return response("No he pogut Esborrar $id", 400);
+            }
+        } else {
+            throw new UnauthorizedException('Forbidden.');
+        }
 
-        if ($oferta->save()) return response(1,200);
 
-        return response("No he pogut Esborrar $id",400);
     }
 
     protected function adviseSomeOne($oferta)
@@ -302,6 +343,22 @@ class OfertaController extends ApiBaseController
         if (selfAuth($request->id_empresa)) {
             $oferta = Oferta::create($request->except(['ciclos']));
             $oferta->Ciclos()->sync($request->ciclos);
+            $this->adviseSomeOne($oferta);
+        } else {
+            throw new UnauthorizedException('Forbidden.');
+        }
+        return new OfertaResource($oferta);
+    }
+
+    public function update(OfertaUpdateRequest $request,$id){
+        $oferta = Oferta::find($id);
+        if (selfAuth($oferta->id_empresa)) {
+            $oferta->update($request->except(['id']));
+            $oferta->validada = false;
+            $oferta->save();
+            if ($request->ciclos){
+                $oferta->Ciclos()->sync($request->ciclos);
+            }
             $this->adviseSomeOne($oferta);
         } else {
             throw new UnauthorizedException('Forbidden.');

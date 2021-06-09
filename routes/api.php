@@ -51,6 +51,7 @@ Route::group(['middleware' => ['auth:api','role:administrador,responsable,empres
         ],
         ['except' => ['store']]);
     Route::post('ofertas','Api\OfertaController@store')->name('ofertas.store');
+    Route::put('ofertas/{id}','Api\OfertaController@update')->name('ofertas.update');
 });
 
 Route::group(['middleware' => ['auth:api','role:administrador,responsable,alumno']], function() {
