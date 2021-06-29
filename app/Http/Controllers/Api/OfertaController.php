@@ -310,11 +310,12 @@ class OfertaController extends ApiBaseController
         $oferta->save();
         if ($oferta->validada) {
             foreach ($this->lookStudents($oferta) as $alumno) {
-                User::find($alumno->id_alumno)->notify(new OfferStudent($oferta->id));
+                User::findOrFail($alumno->id_alumno)->notify(new OfferStudent($oferta->id));
             }
+
         }
 
-        return new $this->resource($oferta);
+        return new OfertaResource($oferta);
     }
 
     private function lookStudents($oferta){

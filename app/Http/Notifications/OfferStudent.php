@@ -3,6 +3,8 @@
 namespace App\Notifications;
 
 
+use App\Http\Resources\OfertaResource;
+use App\Models\Oferta;
 use App\Services\CustomMailMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -44,12 +46,14 @@ class OfferStudent extends Notification
     public function toMail($notifiable)
     {
         $url = "/login";
-        $oferta = $this->offer;
+        $oferta = Oferta::find($this->offer);
         $alumnos = [];
+
 
         foreach ($oferta->Alumnos as $alumno){
             $alumnos[] = '* '.$alumno->fullName . ' (' . $alumno->user->email.')';
         }
+
         return (new CustomMailMessage)
                     ->subject('Nou candidat per a la teu oferta de treball del CIPFP Batoi')
                     ->greeting('Hola '.$oferta->contacto)
