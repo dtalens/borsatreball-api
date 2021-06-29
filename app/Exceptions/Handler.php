@@ -72,6 +72,7 @@ class Handler extends ExceptionHandler
                 else if ($exception instanceof ValidationException) {
                     $exception = $this->convertExceptionToResponse($exception);
                 }
+
                 else if ($exception instanceof UnauthorizedException) {
                     return response()->json(
                         ['message' => $exception->getMessage()],

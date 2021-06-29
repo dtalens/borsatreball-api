@@ -145,9 +145,9 @@ class UserStoreRequest extends FormRequest
             'rol'      => 'required',
 
             // camps comuns
-            'nombre'   => 'required',
+            'nombre'   => 'required|max:25',
             // camps alumno i resposable
-            'apellidos' => 'requiredIf:rol,'.config('role.alumno').','.config('role.responsable'),
+            'apellidos' => 'max:50|requiredIf:rol,'.config('role.alumno').','.config('role.responsable'),
             //camps alumno i empresa
             'domicilio' => 'requiredIf:rol,'.config('role.alumno').','.config('role.empresa'),
             'telefono'    => 'requiredIf:rol,'.config('role.alumno').','.config('role.empresa'),

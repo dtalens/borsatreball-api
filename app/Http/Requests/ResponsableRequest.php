@@ -50,8 +50,8 @@ class ResponsableRequest extends FormRequest
     public function rules()
     {
         return [
-            'nombre'=> 'required',
-            'apellidos' => 'required'
+            'nombre'=> 'required|max:25',
+            'apellidos' => 'required|max:50'
             ];
     }
 }

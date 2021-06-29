@@ -29,6 +29,15 @@ class ResponsablesStoreTest extends FeatureTestCase
         "password_confirmation" => "demo12345",
 
     ];
+    const ERROR_RESPONSABLE = [
+        "nombre" => "John de la olla simplificada del copon",
+        "email" => "responsable@example.es",
+        "apellidos" => "Responsable asdas asd a das das das das das d asd asd as das d asd as das da",
+        "rol" => self::RESPONSABLE_ROL,
+        "password" => "demo12345",
+        "password_confirmation" => "demo12345",
+
+    ];
 
     public function testAdminCreateResponsableSuccesfull()
     {
@@ -116,6 +125,21 @@ class ResponsablesStoreTest extends FeatureTestCase
                     "nombre" => ["The nombre field is required."],
                     "apellidos" =>["The apellidos field is required when rol is ".self::RESPONSABLE_ROL."."]
                  ]
+            ]);
+    }
+
+    public function testNameFieldsIsTooLong()
+    {
+        $this->seed();
+        $this->actingAsRol(self::ADMIN_ROL);
+        $this->json(self::METHOD, self::PETITION,self::ERROR_RESPONSABLE, ['Accept' => 'application/json'])
+            ->assertStatus(422)
+            ->assertJson([
+                "message" => "The given data was invalid.",
+                "errors" => [
+                    "nombre" => ["The nombre may not be greater than 25 characters."],
+                    "apellidos" => ["The apellidos may not be greater than 50 characters."],
+                ]
             ]);
     }
 
