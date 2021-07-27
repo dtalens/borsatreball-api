@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\AlumnoInteresadoRequest;
 use App\Http\Requests\OfertaStoreRequest;
 use App\Http\Requests\OfertaUpdateRequest;
 use App\Models\Oferta;
@@ -256,10 +257,11 @@ class OfertaController extends ApiBaseController
     }
 
 
-    public function alumnoInterested(Request $request,$id)
+    public function alumnoInterested(AlumnoInteresadoRequest $request,$id)
     {
         if (AuthUser()->isAlumno()) {
-            $oferta = Oferta::find($id);
+            $oferta = Oferta::findOrFail($id);
+
             if ($oferta->validada && !$oferta->archivada) {
                 if ($request->interesado) {
                     $oferta->alumnos()->syncWithoutDetaching([AuthUser()->id]);

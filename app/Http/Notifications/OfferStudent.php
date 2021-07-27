@@ -46,7 +46,7 @@ class OfferStudent extends Notification
     public function toMail($notifiable)
     {
         $url = "/login";
-        $oferta = Oferta::find($this->offer);
+        $oferta = $this->offer;
         $alumnos = [];
 
 
