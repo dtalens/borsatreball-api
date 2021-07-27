@@ -13,7 +13,7 @@ class Oferta extends Model
     public $timestamps = true;
     protected $table = 'ofertas';
     protected $fillable = [
-            'id', 'id_empresa','descripcion','puesto','tipo_contrato', 'activa','contacto',
+            'id', 'id_empresa','descripcion','puesto','tipo_contrato', 'activa','contacto','mostrar_contacto',
             'telefono','email', 'any','estudiando','archivada'
         ];
 

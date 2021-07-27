@@ -363,10 +363,11 @@ class OfertaController extends ApiBaseController
                 $oferta->Ciclos()->sync($request->ciclos);
             }
             $this->adviseSomeOne($oferta);
+            return new OfertaResource($oferta);
         } else {
             throw new UnauthorizedException('Forbidden.');
         }
-        return new OfertaResource($oferta);
+
     }
 }
 
