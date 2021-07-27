@@ -21,6 +21,9 @@ class OfertasUpdateTest extends FeatureTestCase
     const INCOMPLETE_DATA = [
         'id_empresa' => 5
     ];
+    const DATA_NULL = [
+        'archivada' => null,
+    ];
 
     public function testUnauthenticated()
     {
@@ -109,6 +112,19 @@ class OfertasUpdateTest extends FeatureTestCase
                 "message" => "The given data was invalid.",
                 "errors" => [
                     "id_empresa" => ["validation.prohibited"]
+                ]
+            ]);
+    }
+    public function testArchivdaNull()
+    {
+        $this->seed();
+        $this->actingAsUser(self::ID_EMPRESA_WITHOUT_OFFERS);
+        $this->json(self::METHOD, self::PETITION, self::DATA_NULL, ['Accept' => 'application/json'])
+            ->assertStatus(422)
+            ->assertJson([
+                "message" => "The given data was invalid.",
+                "errors" => [
+                    "archivada" => ['The archivada field must be true or false.']
                 ]
             ]);
     }

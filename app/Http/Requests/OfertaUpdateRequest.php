@@ -27,6 +27,7 @@ class OfertaUpdateRequest extends FormRequest
     {
         return [
             'id_empresa' => 'prohibited',
+            'archivada' => 'boolean'
         ];
     }
 }

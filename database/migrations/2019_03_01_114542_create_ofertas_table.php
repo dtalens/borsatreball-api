@@ -19,7 +19,7 @@ class CreateOfertasTable extends Migration {
 			$table->string('descripcion', 200)->nullable();
 			$table->string('puesto', 50)->nullable();
 			$table->string('tipo_contrato', 50)->nullable();
-			$table->boolean('activa')->nullable();
+			$table->boolean('activa')->default(0);
 			$table->string('contacto', 50)->nullable();
 			$table->string('telefono', 25)->nullable();
 			$table->string('email', 50)->nullable();
