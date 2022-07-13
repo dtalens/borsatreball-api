@@ -106,6 +106,14 @@ use Illuminate\Foundation\Http\FormRequest;
  *      description="Enllaç al curriculum de l'alumne",
  *      example="https://www.pepebotera.com",
  *      type="string") ,
+ *     @OA\Property(
+ *      property = "ciclos",
+ *      title="cicles",
+ *      description="Cicles de l'alumne",
+ *      type="array",
+ *      example = "[2,4]",
+ *     @OA\Items(),
+ *      ) ,
  *
  *    )
  */
@@ -137,21 +145,24 @@ class UserStoreRequest extends FormRequest
             'rol'      => 'required',
 
             // camps comuns
-            'nombre'   => 'required',
-            'domicilio' => 'required',
-            'telefono'    => 'required',
+            'nombre'   => 'required|max:25',
+            // camps alumno i resposable
+            'apellidos' => 'max:50|requiredIf:rol,'.config('role.alumno').','.config('role.responsable'),
+            //camps alumno i empresa
+            'domicilio' => 'requiredIf:rol,'.config('role.alumno').','.config('role.empresa'),
+            'telefono'    => 'requiredIf:rol,'.config('role.alumno').','.config('role.empresa'),
                 // camps soles empresa
             'cif'      => 'required_if:rol,'.config('role.empresa'),
             'localidad'=> 'required_if:rol,'.config('role.empresa'),
             'contacto' => 'required_if:rol,'.config('role.empresa'),
-            'web'         => 'exclude_if:rol,'.config('role.alumno'),
-            'descripcion' => 'exclude_if:rol,'.config('role.alumno'),
+            'web'         => 'exclude_if:rol,'.config('role.alumno').','.config('role.responsable'),
+            'descripcion' => 'exclude_if:rol,'.config('role.alumno').','.config('role.responsable'),
 
-                // camps soles alumnop
-            'apellidos' => 'requiredIf:rol,'.config('role.alumno'),
-            'info' => 'exclude_if:rol,'.config('role.empresa'),
-            'bolsa' => 'exclude_if:rol,'.config('role.empresa'),
-            'cv_enlace' => 'exclude_if:rol,'.config('role.empresa')
+            // camps soles alumnop
+            'info' => 'exclude_if:rol,'.config('role.empresa').','.config('role.responsable'),
+            'bolsa' => 'exclude_if:rol,'.config('role.empresa').','.config('role.responsable'),
+            'cv_enlace' => 'exclude_if:rol,'.config('role.empresa').','.config('role.responsable'),
+            'ciclos' => 'requiredIf:rol,'.config('role.alumno')
         ];
     }
 }

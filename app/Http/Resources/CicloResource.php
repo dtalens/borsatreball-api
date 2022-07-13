@@ -52,6 +52,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *      example="216",
  *      type="integer"),
  *     @OA\Property(
+ *      property = "name",
+ *      title="Nom responsable",
+ *      description="Nom reponsable del cicle",
+ *      example="Juan Segura",
+ *      type="string"),
+ *     @OA\Property(
  *      property = "cCiclo",
  *      title="Cicle en castellà",
  *      description="Cicle en castellà",
@@ -76,6 +82,17 @@ class CicloResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'codigo' => $this->codigo,
+            'ciclo' => $this->ciclo,
+            'Dept' => $this->Dept,
+            'cDept' => $this->cDept,
+            'vDept' => $this->vDept,
+            'responsable' => $this->responsable,
+            'name' => $this->Responsable->fullName,
+            'vCiclo' => $this->vCiclo,
+            'cCiclo' => $this->cCiclo,
+        ];
     }
 }

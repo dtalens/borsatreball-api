@@ -83,7 +83,9 @@ class EmpresaStoreRequest extends FormRequest
      */
     public function rules()
     {
-        return ['cif' => 'required', 'nombre'   => 'required',
+        return [
+            'cif' => 'required',
+            'nombre'   => 'required',
             'domicilio' => 'required',
             'telefono'    => 'required',
             'localidad'=> 'required',

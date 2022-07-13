@@ -46,43 +46,41 @@ class Handler extends ExceptionHandler
             if (request()->is('api*')) {
                 if ($exception instanceof ModelNotFoundException) {
                     return response()->json(
-                        ['error' => $exception->getMessage()],
+                        ['message' => $exception->getMessage()],
                         404
                     );
                 }
                 else if ($exception instanceof QueryException) {
                     return response()->json(
-                        ['error' => 'SQL no vàlid: ' . $exception->getMessage()],
+                        ['message' => 'BD error.' , 'errors' => $exception->getMessage()],
                         500
                     );
                 }
                 else if ($exception instanceof AuthenticationException||$exception instanceof RouteNotFoundException)
                 {
                     return response()->json(
-                        ['error' => $exception->getMessage()],
-                        422
+                        ['message' => $exception->getMessage()],
+                        421
                     );
                 }
                 else if ($exception instanceof NotFoundHttpException || $exception instanceof MethodNotAllowedHttpException) {
                     return response()->json(
-                        ['error' => $exception->getMessage()],
+                        ['message' => $exception->getMessage()],
                         401
                     );
                 }
                 else if ($exception instanceof ValidationException) {
-                    return response()->json(
-                        ['error' => $exception->getMessage()],
-                        400
-                    );
+                    $exception = $this->convertExceptionToResponse($exception);
                 }
+
                 else if ($exception instanceof UnauthorizedException) {
                     return response()->json(
-                        ['error' => $exception->getMessage()],
+                        ['message' => $exception->getMessage()],
                         405
                     );
                 }
                 else if (isset($exception)) {
-                    return response()->json(['error' => 'Error de servidor:' . $exception->getMessage()], 500);
+                    return response()->json(['message' => 'Error de servidor:' . $exception->getMessage()], 500);
                 }
             }
         });

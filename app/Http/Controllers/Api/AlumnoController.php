@@ -4,18 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\AlumnoCicloUpdateRequest;
 use App\Models\Ciclo;
-use App\Http\Requests\AlumnoStoreRequest;
-use App\Http\Resources\AlumnoResource;
-
 use Illuminate\Http\Request;
-
+use App\Http\Resources\AlumnoResource;
 use App\Models\Alumno;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use App\Notifications\ValidateStudent;
-
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Auth\AuthenticationException;
-use function PHPUnit\Framework\throwException;
-
 
 /**
  * @OA\Get(
@@ -99,6 +95,43 @@ use function PHPUnit\Framework\throwException;
  */
 
 /**
+ * @OA\Put(
+ * path="/api/alumnos/{alumno}/ciclo/{id}",
+ * summary="Validar ciclo alumne",
+ * description="Modificar cicle alumne",
+ * operationId="updateAlumnesCiclo",
+ * tags={"alumnes"},
+ * security={ {"apiAuth": {} }},
+ * @OA\Parameter(
+ *          name="alumno",
+ *          in="path",
+ *          required=true,
+ * ),
+ * @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ * ),
+ * @OA\RequestBody(
+ *    required=true,
+ *    @OA\JsonContent(ref="#/components/schemas/AlumnoCicloUpdateRequest")
+ * ),
+ * @OA\Response(
+ *    response=200,
+ *    description="Alumno amb cicle",
+ *    @OA\JsonContent(ref="#/components/schemas/AlumnoResource")
+ * ),
+ * @OA\Response(
+ *    response=405,
+ *    description="Forbidden",
+ *    @OA\JsonContent(
+ *       @OA\Property(property="message", type="string", example="Forbidden.")
+ *        )
+ *     )
+ * )
+ */
+
+/**
  * @OA\Get(
  * path="/api/alumnos/{id}",
  * summary="Dades d'un alumne",
@@ -125,60 +158,52 @@ use function PHPUnit\Framework\throwException;
  * )
  */
 
+
 /**
- * @OA\Put(
- * path="/api/alumnos/{idAlumno}/ciclo/{idCiclo}",
- * summary="Modificar ciclo Alumno",
- * description="Modificar ciclo Alumno",
- * operationId="updateAlumnesCicle",
+ * @OA\Delete (
+ * path="/api/alumnos/{id}",
+ * summary="Esborra Alumne",
+ * description="Torna les dades de l'alumne esborrat",
+ * operationId="deleteAlumnes",
  * tags={"alumnes"},
  * security={ {"apiAuth": {} }},
  * @OA\Parameter(
- *          name="idAlumno",
+ *          name="id",
  *          in="path",
  *          required=true,
- * ),
- * @OA\Parameter(
- *          name="idCiclo",
- *          in="path",
- *          required=true,
- * ),
- * @OA\RequestBody(
- *    required=true,
- *    @OA\JsonContent(ref="#/components/schemas/AlumnoCicloUpdateRequest")
  * ),
  * @OA\Response(
  *    response=200,
- *    description="Alumno correctament modificat",
- *    @OA\JsonContent(ref="#/components/schemas/AlumnoResource")
- * ),
- * @OA\Response(
- *    response=422,
- *    description="Wrong credentials response",
+ *    description="Alumne esborrat",
  *    @OA\JsonContent(
- *       @OA\Property(property="error", type="string", example="Credencials no vàlides")
+ *        @OA\Property(
+ *          property="data",
+ *          type="array",
+ *          @OA\Items(ref="#/components/schemas/AlumnoResource")
  *        )
- *     )
+ *    )
+ *   )
  * )
  */
 
 class AlumnoController extends ApiBaseController
 {
-    //use traitRelation;
 
     public function model(){
         return 'Alumno';
     }
-   protected function relationShip()
-    {
-        return 'ciclos';
-    }
+
 
     protected function validaCiclo(AlumnoCicloUpdateRequest $request,$idAlumno,$idCiclo)
     {
-        $alumno = Alumno::find($idAlumno);
-        $alumno->Ciclos()->updateExistingPivot($idCiclo, ['any' => $request->any,'validado'=>$request->validado]);
-        return parent::manageResponse($alumno);
+        if (AuthUser()->isResponsable()||AuthUser()->isAdmin()) {
+            $alumno = Alumno::find($idAlumno);
+            $any = $request->any??0;
+            $alumno->Ciclos()->updateExistingPivot($idCiclo, ['any' => $request->any, 'validado' => $request->validado]);
+            return  new AlumnoResource($alumno);
+        } else {
+            throw new UnauthorizedException('Forbidden.');
+        }
     }
 
     protected function adviseSomeOne($registro){
@@ -194,7 +219,7 @@ class AlumnoController extends ApiBaseController
             return AlumnoResource::collection(Alumno::BelongsToCicles(Ciclo::where('responsable', AuthUser()->id)->get()));
         }
         if (AuthUser()->isAlumno()) {
-            return AlumnoResource::collection(Alumno::where('id', AuthUser()->id)->get());
+            return AlumnoResource::collection(Alumno::where('id',AuthUser()->id)->get());
         }
         if (AuthUser()->isEmpresa()) {
             return AlumnoResource::collection(Alumno::InterestedIn(AuthUser()->id));
@@ -207,27 +232,43 @@ class AlumnoController extends ApiBaseController
 
     public function show($id)
     {
-        if (AuthUser()->id == $id){
+        if (selfAuth($id)){
             return parent::show($id);
         } else {
-            throw new UnauthorizedException('No tens permisos');
+            throw new UnauthorizedException('Forbidden.');
         }
     }
 
-    public function update(AlumnoStoreRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        if (AuthUser()->id == $id){
-            $registro = Alumno::findOrFail($id);
-            return $this->manageResponse($registro->update($request->all()));
+        if (onlySelfAuth($id)){
+            $alumno = Alumno::findOrFail($id);
+            $alumno->update($request->except(['id']));
+            if ($request->ciclos) {
+                $alumno->Ciclos()->sync($request->ciclos);
+            }
+            return new AlumnoResource($alumno);
         }
         else {
-            throw new UnauthorizedException('No tens permisos:'.$id);
+            throw new UnauthorizedException('Forbidden.');
         }
     }
 
-    public function store(AlumnoStoreRequest $request)
+    public function destroy($id)
     {
-        return $this->manageResponse(Alumno::create($request->all()));
+        if (selfAuth($id)){
+            Alumno::findOrFail($id);
+            $result = DB::transaction(function () use ($id) {
+                if (Alumno::destroy($id)) {
+                    return User::destroy($id);
+                }
+                return false;
+            });
+            return $result?response(['data'=>['id'=>$id]],200):response(['message'=>'Error'],401);
+        } else {
+            throw new UnauthorizedException('Forbidden.');
+        }
+
     }
 
 

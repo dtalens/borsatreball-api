@@ -28,6 +28,13 @@ class Alumno extends Model
             ->wherePivot('validado',1)
             ->withPivot('any');
     }
+    public function CiclosAcabados()
+    {
+        return $this->belongsToMany(Ciclo::class,'alumnos_ciclos', 'id_alumno',
+            'id_ciclo', 'id', 'id')
+            ->wherePivot('validado',1)
+            ->wherePivot('any','!=',null);
+    }
 
     public function CiclosNoValidos()
     {
@@ -38,7 +45,7 @@ class Alumno extends Model
     }
     public function Ofertas()
     {
-        return $this->belongsToMany(Oferta::class,'ofertas_alumnos', 'id_alumno', 'id_oferta', 'id', 'id')->withPivot('interesado');
+        return $this->belongsToMany(Oferta::class,'ofertas_alumnos', 'id_alumno', 'id_oferta', 'id', 'id');
     }
 
 
@@ -66,7 +73,7 @@ class Alumno extends Model
         $ofertas = $empresa->Ofertas->where('archivada',0);
         $alumnos = new Collection();
         foreach ($ofertas as $oferta){
-            foreach ($oferta->Alumnos->where('pivot.interesado',1) as $alumno){
+            foreach ($oferta->Alumnos as $alumno){
                 if (!$alumnos->contains($alumno)) $alumnos->add($alumno);
             }
 

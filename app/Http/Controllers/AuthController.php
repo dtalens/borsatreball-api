@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Responsable;
 use App\Models\User;
 use App\Models\Alumno;
 use App\Models\Empresa;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Resources\LoginResource;
-use Carbon\Carbon;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Notifications\SignupActivate;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Validation\UnauthorizedException;
+use App\Notifications\SignupActivate;
+
 
 /**
  * @OA\Post(
@@ -37,10 +39,10 @@ use Illuminate\Support\Str;
  *    @OA\JsonContent(ref="#/components/schemas/LoginResource")
  * ),
  * @OA\Response(
- *    response=422,
+ *    response=421,
  *    description="Wrong credentials response",
  *    @OA\JsonContent(
- *       @OA\Property(property="error", type="string", example="Credencials no vàlides")
+ *       @OA\Property(property="message", type="string", example="Login or password are wrong.")
  *        )
  *     )
  * )
@@ -66,11 +68,12 @@ use Illuminate\Support\Str;
  * ),
  * @OA\Response(
  *    response=422,
- *    description="Wrong credentials response",
+ *    description="Dades invalides",
  *    @OA\JsonContent(
- *       @OA\Property(property="error", type="string", example="Credencials no vàlides")
- *        )
+ *       @OA\Property(property="message", type="string", example="The given data was invalid."),
+ *       @OA\Property(property="errors", type="string", example="['email'=>'The field email is required.']")
  *     )
+ * )
  * )
  */
 
@@ -88,46 +91,34 @@ class AuthController extends Controller
 
         DB::transaction(function () use ($user,$request) {
             $user->save();
-            if ($user->isAlumno()) Alumno::create(['nombre' => $request->nombre, 'id' => $user->id,
-                'domicilio'=>$request->domicilio,'telefono'=>$request->telefono,
-                'apellidos'=>$request->apellidos,'info'=>$request->info,'bolsa'=>$request->bolsa,
-                'cv_enlace'=>$request->cv_enlace]);
-            if ($user->isEmpresa()) Empresa::create(['nombre' => $request->nombre, 'id' => $user->id,
+            if ($user->isAlumno()){
+                $alumno = Alumno::create(['nombre' => $request->nombre, 'id' => $user->id,
+                    'domicilio'=>$request->domicilio,'telefono'=>$request->telefono,
+                    'apellidos'=>$request->apellidos,'info'=>$request->info??0,'bolsa'=>$request->bolsa??0,
+                    'cv_enlace'=>$request->cv_enlace]);
+                $alumno->Ciclos()->sync($request->ciclos);
+            } elseif ($user->isEmpresa()) {
+                Empresa::create(['nombre' => $request->nombre, 'id' => $user->id,
                 'domicilio'=>$request->domicilio,'telefono'=>$request->telefono,
                 'cif'=>$request->cif,'localidad'=>$request->localidad,'contacto'=>$request->contacto,
                 'web'=>$request->web,'descripcion'=>$request->descripcion]);
+            } elseif ($user->isResponsable() || $user->isAdmin()) {
+                Responsable::create(['nombre' => $request->nombre, 'id' => $user->id,
+                    'apellidos'=>$request->apellidos]);
+            }
+            else {
+                throw new UnauthorizedException('The given rol was invalid.');
+            }
         });
+        $this->getToken($user);
         $user->notify(new SignupActivate($user));
-        return response()->json($this->getToken($user), 201);
-    }
-
-    public function signupActivate($token)
-    {
-        $user = User::where('activation_token', $token)->first();
-        if (!$user) {
-            return response()->json(['message' => 'El token de activación es inválido'], 404);
-        }
-        $user->active = true;
-        $user->activation_token = '';
-        $user->save();
-
-        return redirect('/');
+        return new LoginResource($user);
     }
 
     private function getToken($user){
         $tokenResult = $user->createToken('Token Acceso Personal');
         $token = $tokenResult->token;
         $token->save();
-
-        //return new LoginResource($user,$tokenResult);
-        return[
-            'access_token' => $tokenResult->accessToken,
-            'rol'          => $user->rol,
-            'token_type'   => 'Bearer',
-            'id'           => $user->id,
-            'expires_at'   => Carbon::parse(
-                $token->expires_at)
-                ->toDateTimeString()];
     }
 
     public function login(Request $request)
@@ -140,7 +131,7 @@ class AuthController extends Controller
         $credentials['active'] = 1;
 
         if (!Auth::attempt($credentials)) {
-            throw new AuthenticationException('Unauthorized');
+            throw new AuthenticationException('Login or password are wrong.');
         }
 
         return new LoginResource($request->user());
@@ -153,8 +144,5 @@ class AuthController extends Controller
             'Successfully logged out']);
     }
 
-    public function user(Request $request)
-    {
-        return response()->json($request->user());
-    }
+
 }

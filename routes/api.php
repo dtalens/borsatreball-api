@@ -27,26 +27,50 @@ Route::group(['prefix' => 'auth'], function () {
 Route::get('ciclos','Api\CicloController@index');
 Route::get('users/{email}/available','Api\UserController@isEmailAvailable');
 
+
 Route::group(['middleware' => 'auth:api'], function() {
-    Route::get('/menu', 'Api\MenuController@index');
+    Route::get('menu', 'Api\MenuController@index');
+    Route::get('ciclos/{id}','Api\CicloController@show');
     Route::apiResources(
         [   'alumnos'   => 'Api\AlumnoController',
-            'empresas'  => 'Api\EmpresaController',
         ],
-        ['except' => ['destroy']]);
+        ['except' => ['destroy','store']]);
     Route::apiResources(
-        [   'users' => 'Api\UserController',
-            'ofertas' => 'Api\OfertaController',
-        ]);
-    Route::apiResources(
-        [   'ciclos'    =>'Api\CicloController'
-        ],
-        ['except' => ['destroy','index']]);
-    Route::put('ofertas/{id}/validar','Api\OfertaController@Valida');
+        [   'users' => 'Api\UserController']);
+    Route::apiResource('ofertas','Api\OfertaController',['except'=>['update','store']]);
+
     Route::put('ofertas/{id}/alumno', 'Api\OfertaController@AlumnoInterested');
     // Modificada
     Route::put('alumnos/{alumno}/ciclo/{id}','Api\AlumnoController@ValidaCiclo')->name('alumnos.ciclo.update');
     Route::get('ofertas-arxiu', 'Api\OfertaController@indexArxiu');
+});
+
+Route::group(['middleware' => ['auth:api','role:administrador,responsable,empresa']], function() {
+    Route::apiResources(
+        [   'empresas'  => 'Api\EmpresaController',
+        ],
+        ['except' => ['store']]);
+    Route::post('ofertas','Api\OfertaController@store')->name('ofertas.store');
+    Route::put('ofertas/{id}','Api\OfertaController@update')->name('ofertas.update');
+});
+
+Route::group(['middleware' => ['auth:api','role:administrador,responsable,alumno']], function() {
+    Route::delete('alumnos/{alumno}','Api\AlumnoController@destroy');
+});
+
+Route::group(['middleware' => ['auth:api','role:administrador']], function() {
+    Route::apiResource('responsables','Api\ResponsableController',['except'=>['update']]);
+    Route::apiResources(
+        [   'ciclos'    =>'Api\CicloController'
+        ],
+        ['except' => ['destroy','index','show']]);
+    Route::put('menu/{id}', 'Api\MenuController@update');
+
+});
+
+Route::group(['middleware' => ['auth:api','role:administrador,responsable']], function() {
+    Route::put('ofertas/{id}/validar','Api\OfertaController@Valida');
+    Route::put('responsables/{id}','Api\ResponsableController@update');
 });
 
 Route::group([

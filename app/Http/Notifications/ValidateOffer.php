@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Entities\Oferta;
+use App\Models\Oferta;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;

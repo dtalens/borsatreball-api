@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Entities\Empresa;
+use Illuminate\Http\Request;
+use App\Models\Empresa;
 use App\Http\Resources\EmpresaResource;
+use Illuminate\Validation\UnauthorizedException;
 
 /**
  * @OA\Get(
@@ -111,6 +113,35 @@ use App\Http\Resources\EmpresaResource;
  *    )
  *   )
  * )
+ *
+ *
+ */
+
+/**
+ * @OA\Delete (
+ * path="/api/empresas/{id}",
+ * summary="Esborra Empresa",
+ * description="Torna id de l'empresa esborrada",
+ * operationId="deleteEmpreses",
+ * tags={"empreses"},
+ * security={ {"apiAuth": {} }},
+ * @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ * ),
+ * @OA\Response(
+ *    response=200,
+ *    description="Empresa esborrasa",
+ *    @OA\JsonContent(
+ *        @OA\Property(
+ *          property="data",
+ *          type="array",
+ *          @OA\Items(ref="#/components/schemas/AlumnoResource")
+ *        )
+ *    )
+ *   )
+ * )
  */
 
 
@@ -123,28 +154,46 @@ class EmpresaController extends ApiBaseController
 
     public function destroy($id)
     {
-        $thereIsAndOffer = Empresa::find($id)->Ofertas()->where('archivada',0)->count();
-        if ($thereIsAndOffer) return response("L'empresa té ofertes. Esborra-les primer",400);
+        if (selfAuth($id)){
+            $empresa = Empresa::findOrFail($id);
+            $thereIsAndOffer = $empresa->Ofertas()->where('archivada',0)->count();
+            if ($thereIsAndOffer) return response(['message'=>"L'empresa té ofertes. Esborra-les primer"],401);
+            if (Empresa::destroy($id)) return response(['data'=>['id'=>$id]],200);
 
-        if (Empresa::destroy($id)) return response(1,200);
-
-        return response("No he pogut Esborrar $id",400);
+            return response(["message"=>"No he pogut Esborrar $id"],401);
+        } else {
+            throw new UnauthorizedException('Forbidden.');
+        }
     }
 
     public function index()
     {
-        if (AuthUser()->isEmpresa())
+        if (AuthUser()->isEmpresa()){
             return EmpresaResource::collection(Empresa::where('id',AuthUser()->id)->get());
-        if (AuthUser()->isAlumno())
-            return [];
-        if (AuthUser()->isAdmin() || AuthUser()->isResponsable()) return parent::index();
-        return response('No autenticado',405);
+        } else {
+            return parent::index();
+        }
     }
 
     public function show($id)
     {
-        if (AuthUser()->isAlumno()) return [];
-        if (AuthUser()->isEmpresa()) $id = AuthUser()->id;
-        if (AuthUser()) return parent::store($id);
+        if (selfAuth($id)) {
+            return parent::show($id);
+        } else {
+            throw new UnauthorizedException('Forbidden.');
+        }
     }
+
+    public function update(Request $request,$id){
+        if (onlySelfAuth($id)) {
+            $empresa = Empresa::findOrFail($id);
+            $empresa->update($request->except(['id']));
+            return new EmpresaResource($empresa);
+        }
+        else {
+            throw new UnauthorizedException('Forbidden.');
+        }
+    }
+
+
 }

@@ -189,24 +189,64 @@
                         "apiAuth": []
                     }
                 ]
+            },
+            "delete": {
+                "tags": [
+                    "alumnes"
+                ],
+                "summary": "Esborra Alumne",
+                "description": "Torna les dades de l'alumne esborrat",
+                "operationId": "deleteAlumnes",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Alumne esborrat",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/AlumnoResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
             }
         },
-        "/api/alumnos/{idAlumno}/ciclo/{idCiclo}": {
+        "/api/alumnos/{alumno}/ciclo/{id}": {
             "put": {
                 "tags": [
                     "alumnes"
                 ],
-                "summary": "Modificar ciclo Alumno",
-                "description": "Modificar ciclo Alumno",
-                "operationId": "updateAlumnesCicle",
+                "summary": "Validar ciclo alumne",
+                "description": "Modificar cicle alumne",
+                "operationId": "updateAlumnesCiclo",
                 "parameters": [
                     {
-                        "name": "idAlumno",
+                        "name": "alumno",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "name": "idCiclo",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -223,7 +263,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Alumno correctament modificat",
+                        "description": "Alumno amb cicle",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -232,15 +272,15 @@
                             }
                         }
                     },
-                    "422": {
-                        "description": "Wrong credentials response",
+                    "405": {
+                        "description": "Forbidden",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "error": {
+                                        "message": {
                                             "type": "string",
-                                            "example": "Credencials no vàlides"
+                                            "example": "Forbidden."
                                         }
                                     },
                                     "type": "object"
@@ -621,6 +661,46 @@
                         "apiAuth": []
                     }
                 ]
+            },
+            "delete": {
+                "tags": [
+                    "empreses"
+                ],
+                "summary": "Esborra Empresa",
+                "description": "Torna id de l'empresa esborrada",
+                "operationId": "deleteEmpreses",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Empresa esborrasa",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/AlumnoResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
             }
         },
         "/api/menu": {
@@ -642,6 +722,591 @@
                                             "type": "array",
                                             "items": {
                                                 "$ref": "#/components/schemas/MenuResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "421": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ofertas": {
+            "get": {
+                "tags": [
+                    "ofertas"
+                ],
+                "summary": "Dades de les ofertes",
+                "description": "Torna les dades de les ofertes segons usuari",
+                "operationId": "indexOfertas",
+                "responses": {
+                    "200": {
+                        "description": "Ofertes segons el permis",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/OfertaResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "ofertas"
+                ],
+                "summary": "Guardar Oferta",
+                "description": "Guardar Oferta",
+                "operationId": "storeOfertas",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OfertaStoreRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Oferta correctament donada d'alta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OfertaResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Credencials no vàlides"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ofertas-arxiu": {
+            "get": {
+                "tags": [
+                    "ofertas"
+                ],
+                "summary": "Dades de les ofertes",
+                "description": "Torna les dades de les ofertes segons usuari",
+                "operationId": "indexOfertasArchivadas",
+                "responses": {
+                    "200": {
+                        "description": "Ofertes segons el permis",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/OfertaResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ofertas/{id}": {
+            "get": {
+                "tags": [
+                    "ofertas"
+                ],
+                "summary": "Dades d'una oferta",
+                "description": "Torna les dades d'una oferta amb dades agregades",
+                "operationId": "showOfertas",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Alumne segons el permis",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/OfertaResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "ofertas"
+                ],
+                "summary": "Modificar Oferta",
+                "description": "Modificar Oferta",
+                "operationId": "updateOfertas",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OfertaStoreRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Oferta correctament donada d'alta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OfertaResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Credencials no vàlides"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ofertas/{id}/validar": {
+            "put": {
+                "tags": [
+                    "ofertas"
+                ],
+                "summary": "Valida Oferta",
+                "description": "Torna les dades de l'oferta valida/desvalidada",
+                "operationId": "validaOfertas",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "validada": {
+                                        "title": "validada",
+                                        "description": "Oferta Validada",
+                                        "type": "boolean",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Oferta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/OfertaResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ofertas/{id}/alumno": {
+            "put": {
+                "tags": [
+                    "ofertas"
+                ],
+                "summary": "Muestra interes por la oferta",
+                "description": "Torna les dades de l'oferta",
+                "operationId": "InteresOfertas",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "interesado": {
+                                        "title": "interesado",
+                                        "description": "Interes",
+                                        "type": "boolean",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Oferta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/OfertaResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/responsables": {
+            "get": {
+                "tags": [
+                    "responsables"
+                ],
+                "summary": "Dades dels responsables",
+                "description": "Torna les dades dels responsables amb els cicles",
+                "operationId": "indexResponsables",
+                "responses": {
+                    "200": {
+                        "description": "Responsables segons el permis",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ResponsableResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "responsables"
+                ],
+                "summary": "Guardar responsable",
+                "description": "Guardar perfil responsable",
+                "operationId": "storeResponsables",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ResponsableRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Responsable correctament donat d'alta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponsableResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Credencials no vàlides"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/responsables/{id}": {
+            "get": {
+                "tags": [
+                    "responsables"
+                ],
+                "summary": "Dades d'un responsable",
+                "description": "Torna les dades d'un responsable amb els cicles",
+                "operationId": "showResponsables",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Responsable",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ResponsableResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "responsables"
+                ],
+                "summary": "Modificar responsable",
+                "description": "Modificar perfil responsable",
+                "operationId": "updateResponsables",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ResponsableRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Responsable correctament donat d'alta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponsableResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Credencials no vàlides"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reponsables/{id}": {
+            "delete": {
+                "tags": [
+                    "responsables"
+                ],
+                "summary": "Esborra Responsable",
+                "description": "Torna les dades del responsable esborrat",
+                "operationId": "deleteResponsables",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Responsable esborrat",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ResponsableResource"
                                             }
                                         }
                                     },
@@ -741,15 +1406,15 @@
                             }
                         }
                     },
-                    "422": {
+                    "421": {
                         "description": "Wrong credentials response",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "error": {
+                                        "message": {
                                             "type": "string",
-                                            "example": "Credencials no vàlides"
+                                            "example": "Login or password are wrong."
                                         }
                                     },
                                     "type": "object"
@@ -791,14 +1456,18 @@
                         }
                     },
                     "422": {
-                        "description": "Wrong credentials response",
+                        "description": "Dades invalides",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "error": {
+                                        "message": {
                                             "type": "string",
-                                            "example": "Credencials no vàlides"
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "string",
+                                            "example": "['email'=>'The field email is required.']"
                                         }
                                     },
                                     "type": "object"
@@ -885,6 +1554,13 @@
                         "description": "Telèfon de l'alumne",
                         "type": "string",
                         "example": "666666666"
+                    },
+                    "ciclos": {
+                        "title": "cicles",
+                        "description": "Cicles de l'alumne",
+                        "type": "array",
+                        "items": {},
+                        "example": "[2,4]"
                     }
                 },
                 "type": "object",
@@ -920,11 +1596,29 @@
                         "type": "integer",
                         "example": "220"
                     },
+                    "cDept": {
+                        "title": "Departament Castellà",
+                        "description": "Nom en castellà del departament",
+                        "type": "string",
+                        "example": "Informática"
+                    },
+                    "vDept": {
+                        "title": "Departament Valencià",
+                        "description": "Nom en valencià del departament",
+                        "type": "string",
+                        "example": "Informàtica"
+                    },
                     "vCiclo": {
                         "title": "vCiclo",
-                        "description": "Info del cicle",
+                        "description": "Informaciò del cicle",
                         "type": "string",
                         "example": "Diseeny d'aplicacion web"
+                    },
+                    "cCiclo": {
+                        "title": "cCiclo",
+                        "description": "Información del ciclo",
+                        "type": "string",
+                        "example": "Diseño de aplicaciones web"
                     }
                 },
                 "type": "object",
@@ -994,6 +1688,122 @@
                 "type": "object",
                 "xml": {
                     "name": "Empresa"
+                }
+            },
+            "OfertaStoreRequest": {
+                "title": "Oferta",
+                "description": "Fillable Ofertas",
+                "properties": {
+                    "id": {
+                        "title": "id",
+                        "description": "Identificador d'oferta",
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "id_empresa": {
+                        "title": "Empresa de la Oferta",
+                        "description": "Empresa de l'oferta",
+                        "type": "integer",
+                        "example": "23"
+                    },
+                    "descripcion": {
+                        "title": "descripcion",
+                        "description": "Descripció de l'oferta",
+                        "type": "string",
+                        "example": "Para arreglar carreteras comarcales"
+                    },
+                    "puesto": {
+                        "title": "puesto",
+                        "description": "Puesto de l'oferta",
+                        "type": "string",
+                        "example": "Peón Caminero"
+                    },
+                    "tipo_contrato": {
+                        "title": "Tipo de contrato",
+                        "description": "Tipo de contrato de la oferta",
+                        "type": "string",
+                        "example": "Indefinido"
+                    },
+                    "activa": {
+                        "title": "activa",
+                        "description": "Oferta activa",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "contacto": {
+                        "title": "contacto",
+                        "description": "Persona de contacte de l'empresa",
+                        "type": "string",
+                        "example": "Pepe Botera"
+                    },
+                    "telefono": {
+                        "title": "telefono",
+                        "description": "Telèfon de contacto",
+                        "type": "string",
+                        "example": "666666666"
+                    },
+                    "email": {
+                        "title": "email",
+                        "description": "email de contacte",
+                        "type": "string",
+                        "example": "pepebotera@gmail.com"
+                    },
+                    "mostrar_contacto": {
+                        "title": "Mostrar contacte",
+                        "description": "Mostre contacte de l'empresa",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "validada": {
+                        "title": "validada",
+                        "description": "Oferta Validada",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "estudiando": {
+                        "title": "estudiando",
+                        "description": "Acepta alumnos",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "archivada": {
+                        "title": "archivada",
+                        "description": "Oferta Archivada",
+                        "type": "boolean",
+                        "example": "0"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Oferta"
+                }
+            },
+            "ResponsableRequest": {
+                "title": "responsable",
+                "description": "Fillable responsables",
+                "properties": {
+                    "id": {
+                        "title": "id",
+                        "description": "Identificador d'usuari",
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "nombre": {
+                        "title": "nombre",
+                        "description": "Nom del responsable",
+                        "type": "string",
+                        "example": "Jose Manuel"
+                    },
+                    "apellidos": {
+                        "title": "apelllidos",
+                        "description": "Cognoms del responsable",
+                        "type": "string",
+                        "example": "Miró García"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "responsable"
                 }
             },
             "UserStoreRequest": {
@@ -1098,6 +1908,13 @@
                         "description": "Enllaç al curriculum de l'alumne",
                         "type": "string",
                         "example": "https://www.pepebotera.com"
+                    },
+                    "ciclos": {
+                        "title": "cicles",
+                        "description": "Cicles de l'alumne",
+                        "type": "array",
+                        "items": {},
+                        "example": "[2,4]"
                     }
                 },
                 "type": "object",
@@ -1267,6 +2084,12 @@
                         "type": "integer",
                         "example": "216"
                     },
+                    "name": {
+                        "title": "Nom responsable",
+                        "description": "Nom reponsable del cicle",
+                        "type": "string",
+                        "example": "Juan Segura"
+                    },
                     "cCiclo": {
                         "title": "Cicle en castellà",
                         "description": "Cicle en castellà",
@@ -1343,45 +2166,69 @@
                     "name": "Empresa"
                 }
             },
+            "KeyResource": {
+                "title": "Keys",
+                "description": "Keys",
+                "properties": {
+                    "id": {
+                        "title": "ID cicle",
+                        "description": "Identificador",
+                        "type": "integer",
+                        "example": "2"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "KeysResource"
+                }
+            },
             "LoginResource": {
                 "title": "Login Resource",
                 "description": "Resposta al Login correcte",
                 "properties": {
-                    "access_token": {
-                        "title": "access_token",
-                        "description": "Token d'accès",
-                        "type": "string",
-                        "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI2IiwianRpIjoiNGY4YjE5OTMzNjQxZjVjMDVjNmU1MGE3MGQxNmE5M2ZkYWZmNjkwZDI5M2Y3MTU2NzM5NTkwMDM5YWFhM2FiZDcw"
-                    },
-                    "rol": {
-                        "title": "rol",
-                        "description": "Rol d'usuari",
-                        "type": "integer",
-                        "example": "2"
-                    },
-                    "token_type": {
-                        "title": "token_type",
-                        "description": "Tipus de token",
-                        "type": "string",
-                        "example": "Bearer"
-                    },
-                    "id": {
-                        "title": "id",
-                        "description": "id d'usuari",
-                        "type": "integer",
-                        "example": "12"
-                    },
-                    "name": {
-                        "title": "name",
-                        "description": "Nom de l'usuari",
-                        "type": "string",
-                        "example": "Ignasi"
-                    },
-                    "expires_at": {
-                        "title": "expires_at",
-                        "description": "Hora caducitat token",
-                        "type": "time",
-                        "example": "2022-03-17 19:37:34"
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "access_token": {
+                                    "title": "access_token",
+                                    "description": "Token d'accès",
+                                    "type": "string",
+                                    "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI2IiwianRpIjoiNGY4YjE5OTMzNjQxZjVjMDVjNmU1MGE3MGQxNmE5M2ZkYWZmNjkwZDI5M2Y3MTU2NzM5NTkwMDM5YWFhM2FiZDcw"
+                                },
+                                "rol": {
+                                    "title": "rol",
+                                    "description": "Rol d'usuari",
+                                    "type": "integer",
+                                    "example": "2"
+                                },
+                                "token_type": {
+                                    "title": "token_type",
+                                    "description": "Tipus de token",
+                                    "type": "string",
+                                    "example": "Bearer"
+                                },
+                                "id": {
+                                    "title": "id",
+                                    "description": "id d'usuari",
+                                    "type": "integer",
+                                    "example": "12"
+                                },
+                                "name": {
+                                    "title": "name",
+                                    "description": "Nom de l'usuari",
+                                    "type": "string",
+                                    "example": "Ignasi"
+                                },
+                                "expires_at": {
+                                    "title": "expires_at",
+                                    "description": "Hora caducitat token",
+                                    "type": "time",
+                                    "example": "2022-03-17 19:37:34"
+                                }
+                            },
+                            "type": "object"
+                        }
                     }
                 },
                 "type": "object",
@@ -1461,6 +2308,183 @@
                 "type": "object",
                 "xml": {
                     "name": "Menu"
+                }
+            },
+            "OfertaResource": {
+                "title": "Oferta",
+                "description": "Ofertas",
+                "properties": {
+                    "id": {
+                        "title": "id",
+                        "description": "Identificador de oferta",
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "id_empresa": {
+                        "title": "id_empresa",
+                        "description": "ID de l'empresa que fa l'oferta",
+                        "type": "integer",
+                        "example": "5"
+                    },
+                    "descripcion": {
+                        "title": "descripcion",
+                        "description": "Descripció de l'oferta",
+                        "type": "string",
+                        "example": "Se busca persona capaz de aguantar horas de sol"
+                    },
+                    "puesto": {
+                        "title": "puesto",
+                        "description": "Lloc de treball",
+                        "type": "string",
+                        "example": "Peon caminero"
+                    },
+                    "tipo_contrato": {
+                        "schema": "OfertaResource",
+                        "title": "tipo_contrato",
+                        "description": "Tipo de contrato ofertado",
+                        "type": "string",
+                        "example": "Temporal"
+                    },
+                    "activa": {
+                        "schema": "OfertaResource",
+                        "title": "activa",
+                        "description": "Oferta Activa",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "contacto": {
+                        "schema": "OfertaResource",
+                        "title": "contacto",
+                        "description": "Persona de contacto",
+                        "type": "string",
+                        "example": "Pepe Botera"
+                    },
+                    "telefono": {
+                        "schema": "OfertaResource",
+                        "title": "telefono",
+                        "description": "Telefono de contacto",
+                        "type": "string",
+                        "example": "546654456"
+                    },
+                    "email": {
+                        "schema": "OfertaResource",
+                        "title": "email",
+                        "description": "Email de contacto",
+                        "type": "string",
+                        "example": "PepeBotera@gmail.com"
+                    },
+                    "mostrar_contacto": {
+                        "schema": "OfertaResource",
+                        "title": "mostrar_contacto",
+                        "description": "Muestro o no el contacto",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "validada": {
+                        "schema": "OfertaResource",
+                        "title": "validada",
+                        "description": "Oferta Validada",
+                        "type": "boolean",
+                        "example": "1"
+                    },
+                    "estudiando": {
+                        "schema": "OfertaResource",
+                        "title": "estudiando",
+                        "description": "Acepta estudiantes",
+                        "type": "boolean",
+                        "example": "0"
+                    },
+                    "interesado": {
+                        "schema": "OfertaResource",
+                        "title": "interesado",
+                        "description": "Si es alumno, si esta interesado en la oferta",
+                        "type": "boolean",
+                        "example": "0"
+                    },
+                    "alumnos": {
+                        "schema": "OfertaResource",
+                        "title": "alumnos",
+                        "description": "Si no es alumno, datos alumnos interesado",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AlumnoResource"
+                        }
+                    },
+                    "ciclos": {
+                        "schema": "OfertaResource",
+                        "title": "ciclos requeridos",
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "title": "id",
+                                    "description": "Identificador de ciclo",
+                                    "type": "integer",
+                                    "example": "2"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "empresa": {
+                        "schema": "OfertaResource",
+                        "title": "empresa",
+                        "description": "Empresa Oferta",
+                        "type": "string",
+                        "example": "Pepe Botera y Otilio,S.A"
+                    },
+                    "created_at": {
+                        "schema": "OfertaResource",
+                        "title": "created_at",
+                        "description": "Hora de creació registre",
+                        "type": "time",
+                        "example": "2022-03-17 19:37:34"
+                    },
+                    "updated_at": {
+                        "schema": "OfertaResource",
+                        "title": "updated_at",
+                        "description": "Hora de modificació registre",
+                        "type": "time",
+                        "example": "2022-03-17 19:37:34"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "OfertasResource"
+                }
+            },
+            "ResponsableResource": {
+                "title": "Alumne",
+                "description": "Dades d'alumne",
+                "properties": {
+                    "id": {
+                        "title": "id",
+                        "description": "Identificador d'usuari",
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "nombre": {
+                        "title": "nombre",
+                        "description": "Nom de l'alumne",
+                        "type": "string",
+                        "example": "Jose Manuel"
+                    },
+                    "apellidos": {
+                        "title": "apelllidos",
+                        "description": "Cognoms de l'alumne",
+                        "type": "string",
+                        "example": "Miró García"
+                    },
+                    "ciclos": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/KeyResource"
+                        }
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Alumno"
                 }
             }
         },

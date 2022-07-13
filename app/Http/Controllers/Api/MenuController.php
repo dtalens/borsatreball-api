@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\MenuResource;
+use Illuminate\Http\Request;
+use App\Models\Menu;
+
 /**
  * @OA\Get(
  * path="/api/menu",
@@ -20,7 +24,14 @@ namespace App\Http\Controllers\Api;
  *          @OA\Items(ref="#/components/schemas/MenuResource")
  *        )
  *    )
- *   )
+ *   ),
+ *  @OA\Response(
+ *    response=421,
+ *    description="Unauthenticated",
+ *    @OA\JsonContent(
+ *       @OA\Property(property="message", type="string", example="Unauthenticated."),
+ *     )
+ *  )
  * )
  */
 
@@ -35,6 +46,14 @@ class MenuController extends ApiBaseController
     public function index(){
         $rolUser = AuthUser()->rol;
         return $this->resource::collection($this->entity::whereRaw('rol % ? = 0',[$rolUser])->orderBy('order')->get());
+    }
+
+    public function update(Request $request, $id)
+    {
+            $menu = Menu::findOrFail($id);
+            $menu->update($request->except(['id']));
+
+            return new MenuResource($menu);
     }
 
 }

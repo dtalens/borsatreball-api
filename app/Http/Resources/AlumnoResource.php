@@ -109,9 +109,9 @@ class AlumnoResource extends JsonResource
             'cv_enlace' => $this->cv_enlace,
             'telefono' => $this->telefono,
             'email' => $this->User->email,
-            'ciclos' => AlumnoCicloResource::collection($this->ciclos),
+            'ciclos' => $this->ciclos?AlumnoCicloResource::collection($this->ciclos):[],
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'updated_at' => $this->updated_at
         ];
     }
 

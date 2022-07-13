@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -13,6 +14,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        $this->call(PersonalTokenSeeder::class);
+        $this->call(MenusTableSeeder::class);
+        $this->call(UsersTableSeeder::class);
+        $this->call(AlumnosTableSeeder::class);
+        $this->call(ResponsablesTableSeeder::class);
+        $this->call(EmpresasTableSeeder::class);
+        $this->call(CiclosTableSeeder::class);
+        $this->call(OfertasTableSeeder::class);
+        $this->call(AlumnosCiclosTableSeeder::class);
+        $this->call(OfertasCiclosTableSeeder::class);
+        $this->call(OfertasAlumnosTableSeeder::class);
     }
 }

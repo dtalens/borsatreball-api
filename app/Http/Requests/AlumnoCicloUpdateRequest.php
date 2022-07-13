@@ -42,7 +42,9 @@ class AlumnoCicloUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        return ['any'=> 'required|numeric|min:2000',
-            'validado'=> 'required|boolean'];
+        return [
+            'validado'=> 'required|boolean',
+            'any'=> 'required_if:validado,true|exclude_if:validado,false|numeric|min:2000|max:'.(date('Y')),
+            ];
     }
 }
